@@ -1,0 +1,29 @@
+@import "bower_components/bootstrap/less/bootstrap.less"; // include if you're using bootstrap, exclude if using suit
+//@import "bower_components/bootstrap/less/theme.less";
+//@import "bower_components/seb-suit/dist/less/suit.less"; // include if you're using suit, exclude if using bootstrap
+@import "bower_components/font-awesome/less/font-awesome.less";
+@font-awesome-path: "bower_components/font-awesome/less/";
+
+
+/* Component LESS */
+@import "directive/generic-table/generic-table.less";
+@import "partial/examples/examples.less";
+/* Add Component LESS Above */
+
+@font-path:    "bower_components/seb-suit/dist/fonts";
+@fa-font-path: "bower_components/font-awesome/fonts";
+
+/* Required for Angular UI Bootstrap */
+.nav, .pagination, .carousel a { cursor: pointer; }
+
+/* Personal preference for BS modal.  The LESS below makes the backdrop white and
+   causes the modal to fade in rather than slide in. */
+//@modal-backdrop-bg: white;
+//.modal {
+//	&.fade {
+//		.transition(opacity .3s);
+//	}
+//	&.fade .modal-dialog {
+//		.translate(0,0);
+//	}
+//}

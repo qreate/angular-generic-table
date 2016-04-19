@@ -1,0 +1,265 @@
+<div class="col-md-12">
+    <div ng-controller="DocumentationController">
+        <h1>Generic table</h1>
+        <h2>Usage</h2>
+        <p>The generic-table needs three things to work: <strong>settings</strong>, <strong>field definitions</strong> and <strong>data</strong>, totals is optional.</p>
+        <br>
+        <h4>Settings</h4>
+        <pre>
+            <code class="line-numbers language-javascript" prism>
+                settings:[{
+                    objectKey:'name', // key for mapping column with data and totals
+                    visible:true, // should column be visible
+                    enabled:true, // should column be enabled (required for filters to work)
+                    sort:'false', // should column be sortable
+                    sortOrder:0, // sort order of column, 0 will be sorted first
+                    columnOrder:0 // column order, starting from the left with zero
+                }]
+            </code>
+        </pre>
+        <br>
+        <h4>Field definitions</h4>
+        <pre>
+            <code class="line-numbers language-javascript" prism>
+                fields:[{
+                    name:'Name', // name or label of the field, will be displayed as heading for column
+                    type:"STRING", // type of data, ie STRING, NUMBER etc.
+                    objectKey:'name', // key for mapping column with settings and totals
+                    classNames:"my-custom-class" // custom class names appended to the column
+                }]
+            </code>
+        </pre>
+        <br>
+        <h4>Data</h4>
+        <pre>
+            <code class="line-numbers language-javascript" prism>
+                data:[{
+                    name:"some data" // array of objects with keys corresponding to the object keys defined in settings and field definitions
+                }]
+            </code>
+        </pre>
+        <br>
+        <h4>Totals (optional)</h4>
+        <pre>
+            <code class="line-numbers language-javascript" prism>
+                totals:{
+                    name:"my summary" // object with keys corresponding to the object keys defined in settings and field definitions
+                }
+            </code>
+        </pre>
+        <br>
+        <h3>Attribute options</h3>
+        <p>Directive attributes available for generic-table directive.</p>
+        <generic-table gt-data="optionsTable.data" gt-settings="optionsTable.settings" gt-fields="optionsTable.fields" gt-pagination=false></generic-table>
+        <br>
+        <h3>Events</h3>
+        <p>Events emitted by the table.</p>
+        <generic-table gt-data="eventsTable.data" gt-settings="eventsTable.settings" gt-fields="eventsTable.fields" gt-pagination=false></generic-table>
+        <br>
+        <h3>Event listeners</h3>
+        <p>Use event listeners to change/update table data, table settings and field definitions. The table will also listen for changes to row length ie. how many rows should be displayed.</p>
+        <generic-table gt-data="listenersTable.data" gt-settings="listenersTable.settings" gt-fields="listenersTable.fields" gt-pagination=false></generic-table>
+    </div>
+    <div ng-controller="BasicExampleController">
+        <br>
+        <h2>Examples</h2>
+        <h3>Basic table with static data</h3>
+        <a ng-click="example = example === true ? false:true;" class="link">
+            <span ng-show="!example">Show code</span>
+            <span ng-show="example">Hide code</span>
+        </a>
+        <div ng-if="example">
+            <h4>Markup</h4>
+            <pre>
+            <code class="line-numbers language-markup" prism>
+                &lt;generic-table gt-data=&quot;basicTable.data&quot; gt-settings=&quot;basicTable.settings&quot; gt-fields=&quot;basicTable.fields&quot; gt-totals=&quot;basicTable.totals&quot; gt-rows=&quot;5&quot;&gt;&lt;/generic-table&gt;
+            </code>
+            </pre>
+            <h4>Javascript</h4>
+            <pre>
+            <code class="line-numbers language-javascript" prism>
+                angular.module('generic.table').controller('BasicExampleController',function($scope){
+                    // Basic table with static data
+                    $scope.basicTable = {
+                        settings: [
+                            {
+                                objectKey:'city',
+                                visible:true,
+                                enabled:true,
+                                sort:'enable',
+                                sortOrder:1,
+                                columnOrder:0
+                            },{
+                                objectKey:'numberOfCats',
+                                visible:true,
+                                enabled:true,
+                                sort:'enable',
+                                sortOrder:0,
+                                columnOrder:1
+                            }
+                        ],
+                        fields:[
+                            {
+                                name:'City',
+                                type:"STRING",
+                                objectKey:'city',
+                                classNames:""
+                            },{
+                                name:'Number of cats',
+                                type:"NUMBER",
+                                objectKey:'numberOfCats',
+                                classNames:"text-right"
+                            }
+                        ],
+                        data:[{
+                            "city": "Juliaca",
+                            "numberOfCats": 149639
+                        }, {
+                            "city": "Watergrasshill",
+                            "numberOfCats": 436290
+                        }, {
+                            "city": "Dondar Quşçu",
+                            "numberOfCats": 725965
+                        }, {
+                            "city": "Florida",
+                            "numberOfCats": 258855
+                        }, {
+                            "city": "Sosnovyy Bor",
+                            "numberOfCats": 486188
+                        }, {
+                            "city": "Bogdanovich",
+                            "numberOfCats": 691411
+                        }, {
+                            "city": "Zaragoza",
+                            "numberOfCats": 304539
+                        }, {
+                            "city": "Karlstad",
+                            "numberOfCats": 364097
+                        }, {
+                            "city": "Tanjay",
+                            "numberOfCats": 970819
+                        }, {
+                            "city": "Troparëvo",
+                            "numberOfCats": 768663
+                        }]
+                    };
+                });
+            </code>
+            </pre>
+        </div>
+        <generic-table gt-data="basicTable.data" gt-settings="basicTable.settings" gt-fields="basicTable.fields" gt-totals="basicTable.totals" gt-rows="5"></generic-table>
+    </div>
+    <div ng-controller="CustomRenderExampleController">
+        <h3>Table with custom render function</h3>
+        <a ng-click="example = example === true ? false:true;" class="link">
+            <span ng-show="!example">Show code</span>
+            <span ng-show="example">Hide code</span>
+        </a>
+        <div ng-if="example">
+            <h4>Markup</h4>
+        <pre>
+            <code class="line-numbers language-markup" prism>
+                &lt;generic-table gt-settings=&quot;tableCustomRender.settings&quot; gt-fields=&quot;tableCustomRender.fields&quot; gt-totals=&quot;tableCustomRender.totals&quot; gt-rows=&quot;25&quot;&gt;&lt;/generic-table&gt;
+            </code>
+        </pre>
+            <h4>Javascript</h4>
+        <pre>
+            <code class="line-numbers language-javascript" prism>
+                angular.module('generic.table').controller('CustomRenderExampleController',function($scope, mockService,$filter,$sce){
+                    // Table with custom render function
+                    $scope.tableCustomRender = {
+                        settings: [
+                            {
+                                objectKey:'fullName',
+                                visible:true,
+                                enabled:true,
+                                sort:'enable',
+                                sortOrder:0,
+                                columnOrder:0
+                            },{
+                                objectKey:'favoriteColor',
+                                visible:true,
+                                enabled:true,
+                                sort:'disabled',
+                                sortOrder:0,
+                                columnOrder:4
+                            },{
+                                objectKey:'birthday',
+                                visible:true,
+                                enabled:true,
+                                sort:'enable',
+                                sortOrder:0,
+                                columnOrder:1
+                            },{
+                                objectKey:'age',
+                                visible:true,
+                                enabled:true,
+                                sort:'disabled',
+                                sortOrder:0,
+                                columnOrder:2
+                            }
+
+                        ],
+                        fields:[
+                            {
+                                name:"Favorite color",
+                                type:"STRING",
+                                objectKey:'favoriteColor',
+                                classNames:"text-right middle",
+                                render:function(row){return $sce.trustAsHtml('<div style="float:right;width:15px;height:15px;border-radius:50%;background: '+row.favoriteColor+'"></div>')}
+                            },{
+                                name:"Birthday",
+                                type:"DATE",
+                                objectKey:'birthday',
+                                classNames:"",
+                                render: function(row){return moment.unix(row.birthday).format('YYYY-MM-DD')}
+                            },{
+                                name:'Name',
+                                type:"STRING",
+                                objectKey:'fullName',
+                                classNames:""
+                            },{
+                                name:'Age',
+                                type:"NUMBER",
+                                objectKey:'age',
+                                classNames:"text-right",
+                                render: function(row){return moment().diff(moment.unix(row.birthday),'years')}
+                            }
+                        ],
+                        data:[]
+                    };
+
+                    mockService.getJsonData().then(function(res){
+                        $scope.$broadcast("update-table", res);
+                    });
+
+
+                }).factory('mockService',function($resource, $http) {
+
+                    /* remote service example
+                    function getData () {
+                        var url = 'http://example.com/json.json';
+                        return $http.jsonp(url).then(function (response) {
+                            return response.data;
+                        });
+
+                    }*/
+
+                    function getJsonData(){
+                        var url = 'mock-data.json';
+                        return $http.get(url).then(function (response) {
+                            //console.log(response.data);
+                            return response.data;
+                        });
+                    }
+
+                    return {
+                        "getJsonData":getJsonData
+                    };
+                });
+            </code>
+        </pre>
+        </div>
+        <generic-table gt-settings="tableCustomRender.settings" gt-fields="tableCustomRender.fields" gt-totals="tableCustomRender.totals" gt-rows="25"></generic-table>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+{
+    "name": "generic.table",
+    "version": "1.0.0",
+    "main": [
+        "dist/js/generic.table.min.js",
+        "dist/css/generic-table.min.css"
+    ],
+    "authors": [
+        "Robert Hjalmers <robert.hjalmers@gmail.com>"
+    ],
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "*",
+        "!dist/**/*"
+    ],
+    "private": true,
+    "dependencies": {
+        "angular": "1.4.8",
+        "angular-animate": "1.4.8",
+        "angular-filter": "0.5.8",
+        "angular-bind-notifier": "^1.1.6",
+        "angular-sanitize": "^1.4.7"
+    },
+    "devDependencies": {
+        "jquery": "~2.0",
+        "underscore": "1.8.3",
+        "lodash": "3.10.1",
+        "bootstrap": "~3.2",
+        "angular-ui-router": "0.2.15",
+        "angular-resource": "1.4.8",
+        "angular-cookies": "1.4.8",
+        "angular-mocks": "1.4.8",
+        "angular-strap": "2.3.6",
+        "moment": "2.10.6",
+        "prism": "^1.4.1",
+        "less.js": "2.5.3",
+        "font-awesome": "4.5.0"
+    }
+}
