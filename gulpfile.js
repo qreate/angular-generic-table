@@ -21,7 +21,6 @@ var autoprefix  = new LessPluginAutoPrefix({ browsers: ["last 2 versions","ie 10
 var ngHtml2Js   = require("gulp-ng-html2js");
 var minifyHtml  = require("gulp-minify-html");
 var concat      = require("gulp-concat");
-var gulpDocs    = require('gulp-ngdocs');
 var runSequence = require('run-sequence');
 var del         = require('del');
 var ngAnnotate  = require('gulp-ng-annotate');
@@ -29,8 +28,12 @@ var cssmin      = require('gulp-cssmin');
 var cheerio     = require('gulp-cheerio');
 var angularProtractor = require('gulp-angular-protractor');
 var rename      = require("gulp-rename");
-var RevAll      = require('gulp-rev-all');
 var bowerfile   = require('./bower.json');
+var tar         = require('gulp-tar');
+var gzip        = require('gulp-gzip');
+var artUpload   = require('gulp-artifactory-upload');
+var gutil       = require('gulp-util');
+
 
 var lessSources = [
     "*.less",
@@ -309,6 +312,20 @@ gulp.task('build', function() {
 gulp.task('build-gt', function() {
     return runSequence('build-clean',
         'build-gt-less','build-gt-template','concat-gt-sources','build-gt-clean');
+});
+
+gulp.task('publish', function () {
+    //Disable the SSL cert check, since the cert on repo.sebank.se is from SEBs own CA
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+    return gulp.src(['**/*', '!bower_components/**', '!node_modules/**'])
+        .pipe(tar(bowerfile.name+'-'+bowerfile.version+'.tar'))
+        .pipe(gzip())
+        .pipe( artUpload( {
+            url: 'https://repo.sebank.se/artifactory/seb-bower-local/'+bowerfile.name+'/'+bowerfile.name+'/'+bowerfile.version+'/',
+            username: 'd75312', // optional
+            password: 'APARLYLBqHLW3SeU' // optional,
+        } ) )
+        .on('error', gutil.log);
 });
 
 // reload task
