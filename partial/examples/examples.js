@@ -199,6 +199,78 @@ angular.module('generic.table').controller('DocumentationController',function($s
             "name":"gt-paginate-table",
             "description":"change how many rows are visible",
             "options":"number, ie. $scope.$broadcast('gt-paginate-table', 10);"
+        },{
+            "name":"gt-export-csv",
+            "description":"export table data to csv, <a href='/#examples#exportOptions'>see all export options</a>.",
+            "options":"export settings object, ie. $scope.$broadcast('gt-export-csv', {fileName:'my-custom-export'});"
+        }]
+    };
+
+    // export options
+    $scope.exportOptionsTable = {
+        settings: [
+            {
+                objectKey:'name',
+                visible:true,
+                enabled:true,
+                sort:'false',
+                sortOrder:0,
+                columnOrder:0
+            },{
+                objectKey:'description',
+                visible:true,
+                enabled:true,
+                sort:'false',
+                sortOrder:1,
+                columnOrder:1
+            },{
+                objectKey:'default',
+                visible:true,
+                enabled:true,
+                sort:'false',
+                sortOrder:2,
+                columnOrder:2
+            }
+
+        ],
+        fields:[
+            {
+                name:'Name',
+                type:"STRING",
+                objectKey:'name',
+                classNames:""
+            },{
+                name:'Description',
+                type:"STRING",
+                objectKey:'description',
+                classNames:""
+            },{
+                name:'Default',
+                type:"STRING",
+                objectKey:'default',
+                classNames:""
+            }
+        ],
+        data:[{
+            "name":"fieldSep",
+            "description":"field separator",
+            "default":";"
+        },{
+            "name":"addByteOrderMarker",
+            "description":"add byte order marker (BOM)",
+            "default":"true"
+        },{
+            "name":"txtDelim",
+            "description":"delimiter for text",
+            "default":'"'
+        },{
+            "name":"decimalSep",
+            "description":"decimal separator",
+            "default":","
+        },{
+            "name":"charset",
+            "description":"character set",
+            "default":"UTF-8"
         }]
     };
 
@@ -270,6 +342,12 @@ angular.module('generic.table').controller('DocumentationController',function($s
     };
 
 }).controller('CustomRenderExampleController',function($scope, mockService,$filter,$sce){
+
+    $scope.exportCsv = function() {
+        $scope.$broadcast('gt-export-csv');
+    };
+
+
     // Table with custom render function
     $scope.tableCustomRender = {
         settings: [
@@ -284,7 +362,7 @@ angular.module('generic.table').controller('DocumentationController',function($s
                 objectKey:'favoriteColor',
                 visible:true,
                 enabled:true,
-                sort:'disabled',
+                sort:'disable',
                 sortOrder:0,
                 columnOrder:4
             },{
@@ -298,7 +376,7 @@ angular.module('generic.table').controller('DocumentationController',function($s
                 objectKey:'age',
                 visible:true,
                 enabled:true,
-                sort:'disabled',
+                sort:'enable',
                 sortOrder:0,
                 columnOrder:2
             }
@@ -327,7 +405,8 @@ angular.module('generic.table').controller('DocumentationController',function($s
                 type:"NUMBER",
                 objectKey:'age',
                 classNames:"text-right",
-                render: function(row){return moment().diff(moment.unix(row.birthday),'years')}
+                render: function(row){return moment().diff(moment.unix(row.birthday),'years')},
+                value: function(row){return moment().diff(moment.unix(row.birthday),'years')}
             }
         ],
         data:[]

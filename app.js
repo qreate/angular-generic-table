@@ -7,13 +7,17 @@
  * # generic-table (core module)
  * The generic-table module is loaded by default.
  */
-angular.module('generic.table', ['mgcrea.ngStrap','ui.router','ngAnimate','ngResource','angular.filter','angular.bind.notifier','ngSanitize']);
+angular.module('generic.table', ['mgcrea.ngStrap','ui.router','ngAnimate','ngResource','angular.filter','angular.bind.notifier','ngSanitize', 'ngCsv']);
 
 angular.module('generic.table').config(function($stateProvider, $urlRouterProvider) {
 
     $stateProvider.state('examples', {
         url: '/examples',
         templateUrl: 'partial/examples/examples.html'
+    });
+    $stateProvider.state('dev', {
+        url: '/dev',
+        templateUrl: 'partial/dev/dev.html'
     });
     /* Add New States Above */
     $urlRouterProvider.otherwise('/examples');

@@ -17,10 +17,10 @@
  * </pre>
  */
 angular.module('generic.table').directive('genericTable', function() {
-	return {
-		restrict: 'E',
-		replace: true,
-		scope: {
+    return {
+        restrict: 'E',
+        replace: true,
+        scope: {
             gtSettings:'=gtSettings',
             gtFields:'=gtFields',
             gtTotals:'=gtTotals',
@@ -29,13 +29,13 @@ angular.module('generic.table').directive('genericTable', function() {
             gtRows:'@gtRows',
             gtRowTransition:'@gtRowTransition',
             gtPagination:'@gtPagination'
-		},
-		templateUrl: 'directive/generic-table/generic-table.html',
-		link: function(scope, element, attrs, fn) {
-		},
+        },
+        templateUrl: 'directive/generic-table/generic-table.html',
+        link: function(scope, element, attrs, fn) {
+        },
         controller:"genericTableController"
-	};
-}).controller('genericTableController',function($scope,$filter,$timeout){
+    };
+}).controller('genericTableController',function($scope,$filter,$timeout, CSV,$document){
     var originalData; // original untouched data
     var mappedData; // mapped data, array containing mapped keys used by table
     var sortedData; // sorted mapped data
@@ -59,7 +59,7 @@ angular.module('generic.table').directive('genericTable', function() {
 
     var initTable = function(initData){
         $scope.gtHasData = false;
-        originalData = initData;
+        originalData = initData.slice(0);
         $scope.$emit('gt-started-data-processing');
         applyFilter(initData);
     };
@@ -67,7 +67,7 @@ angular.module('generic.table').directive('genericTable', function() {
     // change data, this we update or data set
     var changeData = function(newData){
         $scope.gtHasData = false;
-        originalData = newData;
+        originalData = newData.slice(0);
         $scope.$emit('gt-started-data-processing');
         applyFilter(newData);
     };
@@ -82,33 +82,41 @@ angular.module('generic.table').directive('genericTable', function() {
     // mapping, this is where we map which keys should be part of the table array row object
     var mapKeys = function (data){
 
-        // get key names from table fields
-        var properties = $filter('map')($scope.gtFields,function(field){
-            try {
-                var enabled = $filter('filter')($scope.gtSettings,{'objectKey':field.objectKey}, true)[0].enabled; // check if field is enabled
-                if(enabled) return field.objectKey; // only return fields that are enabled
-            } catch(error){
-                console.log('settings object for property: "'+ field.objectKey +'" not found.',error);
-            }
-        });
+        // get key names from settings
+        var properties = $filter('map')($filter('filter')($scope.gtSettings, {enabled:true},true),'objectKey');
 
+        // create new array with mapped data
         mappedData = $filter('map')(data, function(row){
             var obj = {}; // create new row object
 
             // retrieve object values from row and add them to the corresponding key defined by the table fields
             $filter('map')(properties,function(property){
-                obj[property]=row[property];
+                // if property exists in data object...
+                if(typeof row[property] !== 'undefined'){
+                    // get column value from data property
+                    obj[property]=row[property]
+                } else {
+                    //console.log('property: "' + property  + '" does not exist in data object, attempting to use value function instead ');
+                    // property does not exists in data, use value function to get value for column
+                    var valueFunction = $filter('map')($filter('filter')($scope.gtFields, {objectKey:property},true),'value')[0];
+                    if(valueFunction && angular.isFunction(valueFunction)){
+                        // use custom value function to retrieve value for column
+                        //console.log('using value function to get data for row column ');
+                        obj[property] = valueFunction(row);
+                    } else {
+                        console.log('property: "' + property  + '" does not exists in data object and no value function was declared');
+                    }
+                }
             });
             return obj;
         });
-
         // apply sort to our mapped array
         applySort();
     };
 
     // sort, this is where we sort the filtered results
     var applySort = function (){
-        sortedData = $filter('sortTable')(mappedData, sorting);
+        sortedData = $filter('gtSort')(mappedData, sorting);
         $scope.$broadcast('$$rebind::gtRefresh');
         applyPagination();
     };
@@ -153,9 +161,11 @@ angular.module('generic.table').directive('genericTable', function() {
         applyPagination();
     });
 
-    $scope.renderingComplete = function(){
+    // listen for export event
+    $scope.$on('gt-export-csv',function(event,arg){
+        gtExport(arg);
+    });
 
-    };
 
     // create pagination
     var pagination = function(totalPages, currentPage){
@@ -260,7 +270,75 @@ angular.module('generic.table').directive('genericTable', function() {
         initTable($scope.gtData); // initialize table with data passed to directive
     }
 
-}).directive('gsEvent', function() {
+    // export function
+    var gtExport = function(options){
+        options = typeof options === 'undefined'? {}:options;
+
+        var fileName = typeof options.fileName === 'undefined' ? 'export':options.fileName;
+        // declare export data
+        var data = JSON.parse(angular.toJson(sortedData.slice(0)));
+        var headers = {
+            fieldSep: typeof options.fieldSep === 'undefined' ? ";":options.fieldSep,
+            header: $filter('map')($filter('orderBy')($scope.gtFields,"columnOrder"),"name"), // get headers by column order
+            txtDelim: typeof options.txtDelim === 'undefined' ? '"':options.txtDelim,
+            columnOrder:$filter('map')($filter('orderBy')($scope.gtFields,"columnOrder"),"objectKey"), // get column order
+            decimalSep:typeof options.decimalSep === 'undefined' ? ',':options.decimalSep,
+            addByteOrderMarker:typeof options.addBom === 'undefined',
+            charset:typeof options.charset === 'undefined' ? 'utf-8':options.charset
+        };
+        CSV.stringify(data, headers).then(function(result){
+
+            var blob;
+
+            if (window.navigator.msSaveOrOpenBlob) {
+                blob = new Blob([result], {
+                    type: "text/csv;charset=utf-8;"
+                });
+                navigator.msSaveBlob(blob, 'export.csv');
+            }
+            else {
+                // This is not a fully working solution, some tags (tex <BODY>) show up in excel together with the correct data.
+                // We have added an alert message to urge users to use another browser or update their browser for a better looking export.
+                if (window.navigator.appName === 'Microsoft Internet Explorer') {
+                    window.alert("You're using an old version of Internet Explorer and the export might therefore have the wrong format, please update your browser.");
+                    var iframe = angular.element('<iframe></iframe>');
+                    iframe[0].style.display = "none";
+                    var element = angular.element('body');
+                    element.append(iframe);
+                    var doc = null;
+                    if (iframe[0].contentDocument) {
+                        doc = iframe[0].contentDocument;
+                    }else if (iframe[0].contentWindow){
+                        doc = iframe[0].contentWindow.document;
+                    }
+                    doc.open("text/plain", "replace");
+                    doc.write([result]);
+                    doc.close();
+                    //iframe.focus();
+                    doc.execCommand('SaveAs', true, fileName+'.csv');
+                }else{
+                    blob = new Blob([result], {
+                        type: "text/csv;charset=utf-8;"
+                    });
+                    var downloadLink = angular.element('<a></a>');
+                    downloadLink.attr('href', window.URL.createObjectURL(blob));
+                    downloadLink.attr('download',fileName+'.csv');
+
+                    // append download link to body and click it, once clicked remove it
+                    $document.find('body').append(downloadLink);
+                    $timeout(function () {
+
+
+                        downloadLink[0].click();
+                        downloadLink.remove();
+                    }, null);
+                }
+            }
+        });
+
+    };
+
+}).directive('gtEvent', function() {
     return {
         restrict: 'A',
         link: function(scope, element, attrs, fn) {
@@ -302,15 +380,7 @@ angular.module('generic.table').directive('genericTable', function() {
     return function(string){
         return string.replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase();
     }
-}).filter('amountColor',function(){
-    return function(amount){
-        return parseInt(amount) < 0 ? 'text-sell':'text-buy';
-    }
-}).filter('coloredAmount',function($sce, $filter){
-    return function(amount){
-        return $sce.trustAsHtml('<span class="' + $filter('amountColor')(amount) + '">'+ $filter('currency')(parseFloat(amount),'') + '<span/>');
-    }
-}).filter('sortTable',function(){
+}).filter('gtSort',function(){
     return function(array, propertyArray){
         function dynamicSort(property) {
             var sortOrder = 1;
@@ -322,7 +392,7 @@ angular.module('generic.table').directive('genericTable', function() {
                 var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
                 return result * sortOrder;
             }
-        };
+        }
         function dynamicSortMultiple(propertyArray) {
             /*
              * save the arguments object as it will be overwritten
