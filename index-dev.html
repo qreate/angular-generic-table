@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="generic.table">
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link href="bower_components/prism/themes/prism-okaidia.css" type="text/css" rel="stylesheet">
+    <link href="bower_components/prism/plugins/line-numbers/prism-line-numbers.css" type="text/css" rel="stylesheet">
+    <link href="app.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+
+<!-- JS from Bower Components -->
+<script src="bower_components/less.js/dist/less.js" data-concat="false"></script>
+<script src="bower_components/jquery/jquery.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/underscore/underscore.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
+<script src="bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
+<script src="bower_components/angular-filter/dist/angular-filter.js"></script>
+<script src="bower_components/angular-bind-notifier/dist/angular-bind-notifier.min.js"></script>
+<script src="bower_components/prism/prism.js"></script>
+<script src="bower_components/prism/plugins/line-numbers/prism-line-numbers.js"></script>
+<script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
+<!-- Add New Bower Component JS Above -->
+
+
+<!-- Main App JS -->
+<script src="app.js"></script>
+<script src="directive/generic-table/generic-table.js"></script>
+<script src="partial/examples/examples.js"></script>
+<script src="directive/prism/prism.js"></script>
+<script src="partial/dev/dev.js"></script>
+<!-- Add New Component JS Above -->
+
+<div>
+    <div id="content" class="container">
+        <div class="row">
+            <div ui-view>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
