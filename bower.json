@@ -1,6 +1,6 @@
 {
   "name": "generic-table",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": [
     "dist/js/generic.table.min.js",
     "dist/css/generic-table.min.css"
