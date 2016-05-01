@@ -51,7 +51,6 @@ node_modules
 .idea/seb-ts-login.iml
 .idea/vcs.xml
 .idea/workspace.xml
-dist
 docs
 .idea/seb-angular-components.iml
 .idea/libraries/seb_angular_components_node_modules.xml

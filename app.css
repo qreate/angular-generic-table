@@ -8219,6 +8219,9 @@ div.generic-table table tr td.middle {
 div.generic-table table tr td > span.gt-click-enabled {
   cursor: pointer;
 }
+div.generic-table table tr td.gt-no-data {
+  text-align: center;
+}
 div.generic-table div.gt-pagination ul li.active button {
   font-weight: bold;
   color: #000;

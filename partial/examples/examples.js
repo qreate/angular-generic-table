@@ -91,6 +91,11 @@ angular.module('generic.table').controller('DocumentationController',function($s
             "type":"boolean",
             "default":"true",
             "description":"show pagination"
+        },{
+            "name":"gt-no-data-txt (optional)",
+            "type":"string",
+            "default":"No table data to display",
+            "description":"text for when table is empty"
         }]
     };
 

@@ -28,7 +28,8 @@ angular.module('generic.table').directive('genericTable', function() {
             gtData:'=gtData',
             gtRows:'@gtRows',
             gtRowTransition:'@gtRowTransition',
-            gtPagination:'@gtPagination'
+            gtPagination:'@gtPagination',
+            gtNoDataTxt:'@'
         },
         templateUrl: 'directive/generic-table/generic-table.html',
         link: function(scope, element, attrs, fn) {
@@ -42,6 +43,7 @@ angular.module('generic.table').directive('genericTable', function() {
     var sorting = []; // array containing sorting criterias
     $scope.gtPagination = typeof $scope.gtPagination === 'undefined' ? true:$scope.gtPagination !== 'false';
     $scope.gtRows = typeof $scope.gtRows === 'undefined' ? 20:$scope.gtRows;
+    $scope.gtNoDataTxt = typeof $scope.gtNoDataTxt === 'undefined' ? 'No table data to display':$scope.gtNoDataTxt;
     /*$scope.table = {
      index:$scope.gtIndex,
      settings: $scope.gtSettings,
@@ -125,7 +127,6 @@ angular.module('generic.table').directive('genericTable', function() {
     var applyPagination = function (){
         $scope.pages = $filter('chunkBy')(sortedData, parseInt($scope.gtRows));
         $scope.currentPage = 0;
-
         $scope.loading = true;
         $scope.$emit('gt-started-rendering');
         $scope.gtDisplayData = $scope.pages[$scope.currentPage];
@@ -170,6 +171,12 @@ angular.module('generic.table').directive('genericTable', function() {
     // create pagination
     var pagination = function(totalPages, currentPage){
         $scope.pagination = [];
+
+        // if total pages equals 0 ie. no data available
+        if(totalPages === 0 ) {
+            $scope.pagination = false;
+            return;
+        }
 
         // if less than two pages
         if(totalPages < 2){

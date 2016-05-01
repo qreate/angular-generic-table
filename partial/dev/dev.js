@@ -58,37 +58,7 @@ angular.module('generic.table').controller('DevController',function($scope){
                 value:function(row){ return row.numberOfCats/(row.numberOfCats*1.2);}
             }
         ],
-        data:[{
-            "city": "Juliaca",
-            "numberOfCats": 149639
-        }, {
-            "city": "Watergrasshill",
-            "numberOfCats": 436290
-        }, {
-            "city": "Dondar Quşçu",
-            "numberOfCats": 725965
-        }, {
-            "city": "Florida",
-            "numberOfCats": 258855
-        }, {
-            "city": "Sosnovyy Bor",
-            "numberOfCats": 486188
-        }, {
-            "city": "Bogdanovich",
-            "numberOfCats": 691411
-        }, {
-            "city": "Zaragoza",
-            "numberOfCats": 304539
-        }, {
-            "city": "Karlstad",
-            "numberOfCats": 364097
-        }, {
-            "city": "Tanjay",
-            "numberOfCats": 970819
-        }, {
-            "city": "Troparëvo",
-            "numberOfCats": 768663
-        }]
+        data:[]
     };
 
 });
