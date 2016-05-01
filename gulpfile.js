@@ -83,6 +83,26 @@ var htmlSources = [
     "*/modal/**/*.html"
 ];
 
+var indexSources = [
+    "bower_components/less.js/dist/less.js",
+    "bower_components/jquery/jquery.js",
+    "bower_components/bootstrap/dist/js/bootstrap.js",
+    "bower_components/underscore/underscore.js",
+    "bower_components/moment/moment.js",
+    "bower_components/angular/angular.js",
+    "bower_components/angular-ui-router/release/angular-ui-router.js",
+    "bower_components/angular-sanitize/angular-sanitize.min.js",
+    "bower_components/angular-animate/angular-animate.js",
+    "bower_components/angular-resource/angular-resource.js",
+    "bower_components/angular-strap/dist/angular-strap.min.js",
+    "bower_components/angular-strap/dist/angular-strap.tpl.min.js",
+    "bower_components/angular-filter/dist/angular-filter.js",
+    "bower_components/angular-bind-notifier/dist/angular-bind-notifier.min.js",
+    "bower_components/prism/prism.js",
+    "bower_components/prism/plugins/line-numbers/prism-line-numbers.js",
+    "bower_components/ng-csv/build/ng-csv.min.js"
+];
+
 // get sources from index.html
 var sourceFiles = function() {
     return domSrc({file:'index.html',selector:'script[data-concat!="false"]',attribute:'src'});
@@ -198,6 +218,52 @@ gulp.task('build-gt-less', function () {
         .pipe(gulp.dest('./dist/css'));
 });
 
+// compile less files into dist css
+gulp.task('build-gt-less', function () {
+    return gulp.src(["./directive/generic-table/generic-table.less"])
+        .pipe(gulp.dest("./dist/less"))
+        .pipe(gulpPrint(function(filepath) {
+            return "compiling less: " + filepath;
+        }))
+        //uncomment sourcemaps and run autoprefix
+        //.pipe(sourcemaps.init())
+        .pipe(less({
+            paths:['./'],
+            plugins: [autoprefix]
+        }))
+        .pipe(filter('generic-table.css'))
+
+        //.pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest('./dist/css'))// Write the CSS & Source maps
+        .pipe(filter('**/*.css')) // Filtering stream to only css files
+        .pipe(cssmin()) // Minify css
+        .pipe(rename("generic-table.min.css"))
+        .pipe(gulp.dest('./dist/css'));
+});
+
+// compile less files into dist css
+gulp.task('build-examples-less', function () {
+    return gulp.src(["./partial/examples/examples.less"])
+        .pipe(gulp.dest("./dist/less"))
+        .pipe(gulpPrint(function(filepath) {
+            return "compiling less: " + filepath;
+        }))
+        //uncomment sourcemaps and run autoprefix
+        //.pipe(sourcemaps.init())
+        .pipe(less({
+            paths:['./'],
+            plugins: [autoprefix]
+        }))
+        .pipe(filter('examples.css'))
+
+        //.pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest('./dist/css'))// Write the CSS & Source maps
+        .pipe(filter('**/*.css')) // Filtering stream to only css files
+        .pipe(cssmin()) // Minify css
+        .pipe(rename("examples.min.css"))
+        .pipe(gulp.dest('./dist/css'));
+});
+
 // start server
 gulp.task('browser-sync', function() {
     bs.init({
@@ -284,6 +350,21 @@ gulp.task('concat-gt-sources',function(){
 
 });
 
+// concatenate index sources
+gulp.task('concat-index-sources',function(){
+    return gulp.src(indexSources)
+        .pipe(sourcemaps.init())
+        .pipe(concat("vendor.js"))
+        .pipe(gulp.dest("./dist/js/"))
+        .pipe(concat("vendor.min.js"))
+        .pipe(ngAnnotate())
+        .pipe(uglify({mangle: true}))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest("./dist/js/"));
+
+});
+
+
 // copy-less files into dist
 gulp.task('copy-less',function(){
     return del(['dist/less/**/*']),
@@ -312,20 +393,6 @@ gulp.task('build', function() {
 gulp.task('build-gt', function() {
     return runSequence('build-clean',
         'build-gt-less','build-gt-template','concat-gt-sources','build-gt-clean');
-});
-
-gulp.task('publish', function () {
-    //Disable the SSL cert check, since the cert on repo.sebank.se is from SEBs own CA
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-    return gulp.src(['**/*', '!bower_components/**', '!node_modules/**'])
-        .pipe(tar(bowerfile.name+'-'+bowerfile.version+'.tar'))
-        .pipe(gzip())
-        .pipe( artUpload( {
-            url: 'https://repo.sebank.se/artifactory/seb-bower-local/'+bowerfile.name+'/'+bowerfile.name+'/'+bowerfile.version+'/',
-            username: 'd75312', // optional
-            password: 'APARLYLBqHLW3SeU' // optional,
-        } ) )
-        .on('error', gutil.log);
 });
 
 // reload task

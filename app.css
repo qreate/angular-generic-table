@@ -8226,12 +8226,6 @@ div.generic-table div.gt-pagination ul li.active button {
   font-weight: bold;
   color: #000;
 }
-pre.line-numbers {
-  padding-left: 0;
-}
-a.link {
-  cursor: pointer;
-}
 /* Add Component LESS Above */
 /* Required for Angular UI Bootstrap */
 .nav,
