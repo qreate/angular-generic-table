@@ -22,6 +22,7 @@ angular.module('generic.table').directive('genericTable', function() {
         replace: true,
         scope: {
             gtId:'=gtId',
+            gtClasses:'@gtClasses',
             gtSettings:'=gtSettings',
             gtFields:'=gtFields',
             gtTotals:'=gtTotals',
@@ -42,7 +43,11 @@ angular.module('generic.table').directive('genericTable', function() {
     var originalData; // original untouched data
     var mappedData; // mapped data, array containing mapped keys used by table
     var sortedData; // sorted mapped data
-    var sorting = []; // array containing sorting criterias
+    var sorting = $filter('map')($filter('filter')($scope.gtSettings,{sort:"asc desc"},function(expected, actual){
+        return actual.indexOf(expected) > -1;
+    }),function(sort){
+        return (sort.sort === 'desc' ? '-':'') + sort.objectKey
+    }); // returns array containing sorting criterias
     $scope.gtPagination = typeof $scope.gtPagination === 'undefined' ? true:$scope.gtPagination !== 'false';
     $scope.gtRows = typeof $scope.gtRows === 'undefined' ? 20:$scope.gtRows;
     $scope.gtNoDataTxt = typeof $scope.gtNoDataTxt === 'undefined' ? 'No table data to display':$scope.gtNoDataTxt;
@@ -124,6 +129,15 @@ angular.module('generic.table').directive('genericTable', function() {
         sortedData = $filter('gtSort')(mappedData, sorting);
         $scope.$broadcast('$$rebind::gtRefresh');
         applyPagination();
+    };
+
+    // get sorting i.e. returns array with sorting properties
+    var getSorting = function(){
+        $filter('map')($filter('filter')($scope.gtSettings,{sort:"asc desc"},function(expected, actual){
+            return actual.indexOf(expected) > -1;
+        }),function(sort){
+            return (sort.sort === 'desc' ? '-':'') + sort.objectKey
+        });
     };
 
     // pagination, this is where we decide which subset of the data to show

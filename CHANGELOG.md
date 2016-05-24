@@ -5,6 +5,13 @@ Release History
 ### Added
 - Support for expanding rows
 
+## [1.0.5] - 2016-05-24
+### Added
+- Support for adding class names to table element
+
+### Fixed
+- Initial sorting
+
 ## [1.0.4] - 2016-05-16
 ### Added
 - Support for multiple tables within same controller

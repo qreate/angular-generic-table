@@ -62,6 +62,11 @@ angular.module('generic.table').controller('DocumentationController',function($s
             "default":"id of table scope",
             "description":"unique id for table, if none is passed, the scope id will be returned. Use id together with events"
         },{
+            "name":"gt-classes (optional)",
+            "type":"string",
+            "default":"",
+            "description":"add classes to table element e.g. table-bordered, table-condensed etc. for bootstrap styles"
+        },{
             "name":"gt-data (optional)",
             "type":"array",
             "default":"",
