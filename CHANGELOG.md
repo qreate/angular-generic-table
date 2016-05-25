@@ -5,6 +5,10 @@ Release History
 ### Added
 - Support for expanding rows
 
+## [1.0.6] - 2016-05-25
+### Added
+- Support for reusing or forcing sorting when table structure is updated using `$scope.$broadcast('gt-update-structure:tableId', table);` where table should be an object containing 'settings' (array) and 'fields' (array) and optionally 'forceSorting' (boolean)
+
 ## [1.0.5] - 2016-05-24
 ### Added
 - Support for adding class names to table element
