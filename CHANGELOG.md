@@ -5,6 +5,10 @@ Release History
 ### Added
 - Support for expanding rows
 
+# [1.0.8] - 2016-05-31
+### Fixed
+- Missing files due to commit error
+
 # [1.0.7] - 2016-05-31
 ### Added
 - Support for custom display function for export to CSV
