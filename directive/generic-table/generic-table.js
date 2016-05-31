@@ -1,3 +1,5 @@
+!function(e){try{e=angular.module("generic.table")}catch(t){e=angular.module("generic.table",[])}e.run(["$templateCache",function(e){e.put("directive/generic-table/generic-table.html",'<div class="generic-table"><table class="table table-sortable" ng-if="gtHasData" ng-class="gtClasses"><thead><tr ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><th ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class=":gtRefresh:[field.classNames, (field.objectKey | camelToDash) + \'-column\', \'sort-\'+(gtSettings | getProperty:field.objectKey:\'sort\')]"><span ng-click=":gtRefresh:(gtSettings | getProperty:field.objectKey:\'sort\') === \'enable\' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:\'sort\') === \'asc\' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:\'sort\') === \'desc\' ? sort(field.objectKey):\'\'">{{::field.name}}</span></th></tr><tr ng-if="gtTotals" ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><td ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" class="total-column" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class="::[(gtFields | getProperty:field.objectKey:\'classNames\'), (field.objectKey | camelToDash) + \'-column\']" ng-bind-html="::gtFields | gtRender:gtTotals:field.objectKey"></td></tr></thead><tbody><tr ng-repeat="row in gtDisplayData | limitTo: displayRows" gt-event="" ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><td ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class="::[(gtFields | getProperty:field.objectKey:\'classNames\'), (field.objectKey | camelToDash) + \'-column\']"><span ng-class="::field.click ? \'gt-click-enabled\':\'\'" ng-bind-html="::gtFields | gtRender:row:field.objectKey" ng-click="::!field.click || field.click(row)"></span></td></tr></tbody><tr ng-if="pagination === false"><td class="gt-no-data" colspan="{{:gtRefresh:(gtSettings | filter:{\'visible\':true}:true).length}}">{{::gtNoDataTxt}}</td></tr></table><div class="gt-pagination text-center" ng-if="gtPagination === true && pagination !== false"><ul class="pagination"><li ng-class="{disabled: currentPage === 0}" ng-show="currentPage !== 0"><button class="btn-link link" ng-click="previousPage()" translate="ALL.GENERAL#PAGINATION_PREVIOUS#BUTTON" ng-disabled="currentPage === 0">« Prev</button></li><li ng-show="currentPage > 3"><button class="btn-link link" ng-click="setPage(0)">1</button><small>…</small></li><li style="display: inline;padding: 0 5px;" ng-repeat="page in pagination" ng-class="page === currentPage ? \'active\':\'\'"><button class="btn-link link" ng-click="setPage(page)">{{page+1}}</button></li><li ng-show="currentPage +1 < pages.length-1 && pages.length > 4"><small ng-show="currentPage + 3 < pages.length">…</small><button class="btn-link link" ng-click="setPage(pages.length-1)">{{pages.length}}</button></li><li ng-class="{disabled: currentPage == pages.length}" ng-show="currentPage+1 !== pages.length"><button class="btn-link link" ng-click="nextPage()" translate="ALL.GENERAL#PAGINATION_NEXT#BUTTON" ng-disabled="currentPage+1 === pages.length">Next »</button></li></ul></div></div>')}])}();
+!function(e){try{e=angular.module("generic.table")}catch(t){e=angular.module("generic.table",[])}e.run(["$templateCache",function(e){e.put("directive/generic-table/generic-table.html",'<div class="generic-table"><table class="table table-sortable" ng-if="gtHasData" ng-class="gtClasses"><thead><tr ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><th ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class=":gtRefresh:[field.classNames, (field.objectKey | camelToDash) + \'-column\', \'sort-\'+(gtSettings | getProperty:field.objectKey:\'sort\')]"><span ng-click=":gtRefresh:(gtSettings | getProperty:field.objectKey:\'sort\') === \'enable\' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:\'sort\') === \'asc\' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:\'sort\') === \'desc\' ? sort(field.objectKey):\'\'">{{::field.name}}</span></th></tr><tr ng-if="gtTotals" ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><td ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" class="total-column" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class="::[(gtFields | getProperty:field.objectKey:\'classNames\'), (field.objectKey | camelToDash) + \'-column\']" ng-bind-html="::gtFields | gtRender:gtTotals:field.objectKey"></td></tr></thead><tbody><tr ng-repeat="row in gtDisplayData | limitTo: displayRows" gt-event="" ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><td ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class="::[(gtFields | getProperty:field.objectKey:\'classNames\'), (field.objectKey | camelToDash) + \'-column\']"><span ng-class="::field.click ? \'gt-click-enabled\':\'\'" ng-bind-html="::gtFields | gtRender:row:field.objectKey" ng-click="::!field.click || field.click(row)"></span></td></tr></tbody><tr ng-if="pagination === false"><td class="gt-no-data" colspan="{{:gtRefresh:(gtSettings | filter:{\'visible\':true}:true).length}}">{{::gtNoDataTxt}}</td></tr></table><div class="gt-pagination text-center" ng-if="gtPagination === true && pagination !== false"><ul class="pagination"><li ng-class="{disabled: currentPage === 0}" ng-show="currentPage !== 0"><button class="btn-link link" ng-click="previousPage()" translate="ALL.GENERAL#PAGINATION_PREVIOUS#BUTTON" ng-disabled="currentPage === 0">« Prev</button></li><li ng-show="currentPage > 3"><button class="btn-link link" ng-click="setPage(0)">1</button><small>…</small></li><li style="display: inline;padding: 0 5px;" ng-repeat="page in pagination" ng-class="page === currentPage ? \'active\':\'\'"><button class="btn-link link" ng-click="setPage(page)">{{page+1}}</button></li><li ng-show="currentPage +1 < pages.length-1 && pages.length > 4"><small ng-show="currentPage + 3 < pages.length">…</small><button class="btn-link link" ng-click="setPage(pages.length-1)">{{pages.length}}</button></li><li ng-class="{disabled: currentPage == pages.length}" ng-show="currentPage+1 !== pages.length"><button class="btn-link link" ng-click="nextPage()" translate="ALL.GENERAL#PAGINATION_NEXT#BUTTON" ng-disabled="currentPage+1 === pages.length">Next »</button></li></ul></div></div>')}])}();
 /**
  * @ngdoc directive
  * @name generic.table.directive:genericTable
@@ -21,6 +23,8 @@ angular.module('generic.table').directive('genericTable', function() {
         restrict: 'E',
         replace: true,
         scope: {
+            gtId:'=gtId',
+            gtClasses:'@gtClasses',
             gtSettings:'=gtSettings',
             gtFields:'=gtFields',
             gtTotals:'=gtTotals',
@@ -33,6 +37,7 @@ angular.module('generic.table').directive('genericTable', function() {
         },
         templateUrl: 'directive/generic-table/generic-table.html',
         link: function(scope, element, attrs, fn) {
+
         },
         controller:"genericTableController"
     };
@@ -40,10 +45,15 @@ angular.module('generic.table').directive('genericTable', function() {
     var originalData; // original untouched data
     var mappedData; // mapped data, array containing mapped keys used by table
     var sortedData; // sorted mapped data
-    var sorting = []; // array containing sorting criterias
+    var sorting = typeof $scope.gtSettings === 'undefined' ? false:$filter('map')($filter('filter')($scope.gtSettings,{sort:"asc desc"},function(expected, actual){
+        return actual.indexOf(expected) > -1;
+    }),function(sort){
+        return (sort.sort === 'desc' ? '-':'') + sort.objectKey
+    }); // returns array containing sorting criteria
     $scope.gtPagination = typeof $scope.gtPagination === 'undefined' ? true:$scope.gtPagination !== 'false';
     $scope.gtRows = typeof $scope.gtRows === 'undefined' ? 20:$scope.gtRows;
     $scope.gtNoDataTxt = typeof $scope.gtNoDataTxt === 'undefined' ? 'No table data to display':$scope.gtNoDataTxt;
+    $scope.gtId = typeof $scope.gtId === 'undefined' ? $scope.$id:$scope.gtId;
     /*$scope.table = {
      index:$scope.gtIndex,
      settings: $scope.gtSettings,
@@ -53,7 +63,13 @@ angular.module('generic.table').directive('genericTable', function() {
 
     // order columns
     $filter('map')($scope.gtSettings,function(setting){
-        try{$filter('filter')($scope.gtFields,{objectKey:setting.objectKey},true)[0].columnOrder = setting.columnOrder;} catch(error) {
+        try{
+            var field = $filter('filter')($scope.gtFields,{objectKey:setting.objectKey},true)[0];
+            field.columnOrder = setting.columnOrder;
+            if(setting.export === false){
+                field.exportField = false;
+            }
+        } catch(error) {
             console.log('field definition object for property: "'+ setting.objectKey +'" not found.',error);
         }
 
@@ -62,7 +78,7 @@ angular.module('generic.table').directive('genericTable', function() {
     var initTable = function(initData){
         $scope.gtHasData = false;
         originalData = initData.slice(0);
-        $scope.$emit('gt-started-data-processing');
+        $scope.$emit('gt-started-data-processing',$scope.gtId);
         applyFilter(initData);
     };
 
@@ -70,7 +86,7 @@ angular.module('generic.table').directive('genericTable', function() {
     var changeData = function(newData){
         $scope.gtHasData = false;
         originalData = newData.slice(0);
-        $scope.$emit('gt-started-data-processing');
+        $scope.$emit('gt-started-data-processing',$scope.gtId);
         applyFilter(newData);
     };
 
@@ -118,7 +134,7 @@ angular.module('generic.table').directive('genericTable', function() {
 
     // sort, this is where we sort the filtered results
     var applySort = function (){
-        sortedData = $filter('gtSort')(mappedData, sorting);
+        sortedData = sorting !== false ? $filter('gtSort')(mappedData, sorting): mappedData;
         $scope.$broadcast('$$rebind::gtRefresh');
         applyPagination();
     };
@@ -133,7 +149,7 @@ angular.module('generic.table').directive('genericTable', function() {
         pagination($scope.pages.length,$scope.currentPage);
 
         $timeout(function(){
-            $scope.$emit('gt-finished-data-processing');
+            $scope.$emit('gt-finished-data-processing',$scope.gtId);
             $scope.gtHasData = true;
         },200);
         //$scope.$emit('gt-finished-rendering');
@@ -145,25 +161,51 @@ angular.module('generic.table').directive('genericTable', function() {
     };
 
     // listen for update table events
-    $scope.$on('gt-update-table',function(event,arg){
+    $scope.$on('gt-update-table:'+$scope.gtId,function(event,arg){
         changeData(arg);
     });
 
     // listen for update table events
-    $scope.$on('gt-update-structure',function(event,arg){
+    $scope.$on('gt-update-structure:'+$scope.gtId,function(event,arg){
         $scope.gtFields = arg.fields;
         $scope.gtSettings = arg.settings;
+
+        // if no sorting is applied or if sorting is forced...
+        if(sorting === false || arg.forceSorting === true) {
+
+            // ...set sorting order
+            sorting = $filter('map')($filter('filter')($scope.gtSettings,{sort:"asc desc"},function(expected, actual){
+                return actual.indexOf(expected) > -1;
+            }),function(sort){
+                return (sort.sort === 'desc' ? '-':'') + sort.objectKey
+            }); // returns array containing sorting criteria
+        } else {
+            // reset sorting setting 'asc' and 'desc' to 'enable'
+            $filter('map')($filter('filter')($scope.gtSettings,{sort:"asc desc"},function(expected, actual){
+                return actual.indexOf(expected) > -1;
+            }),function(setting){
+                setting.sort = 'enable';
+            });
+
+            // update settings to match sorting in table
+            $filter('map')(sorting,function(sortProperty){
+                var sort = sortProperty.indexOf('-') === -1 ? 'asc':'desc';
+                sortProperty = sortProperty.replace('-','');
+                $filter('filter')($scope.gtSettings, {'objectKey':sortProperty},true)[0].sort = sort;
+            });
+        }
+
     });
 
 
     // listen for pagination length change
-    $scope.$on('gt-paginate-table',function(event,arg){
+    $scope.$on('gt-paginate-table:'+$scope.gtId,function(event,arg){
         $scope.gtRows = parseInt(arg);
         applyPagination();
     });
 
     // listen for export event
-    $scope.$on('gt-export-csv',function(event,arg){
+    $scope.$on('gt-export-csv:'+$scope.gtId,function(event,arg){
         gtExport(arg);
     });
 
@@ -216,7 +258,7 @@ angular.module('generic.table').directive('genericTable', function() {
         try {
             $scope.currentPage ++;
             pagination($scope.pages.length,$scope.currentPage);
-            $scope.$emit('gt-started-rendering');
+            $scope.$emit('gt-started-rendering',$scope.gtId);
             $scope.gtDisplayData = $scope.pages[$scope.currentPage];
         } catch(error) {
             console.log(error);
@@ -227,13 +269,13 @@ angular.module('generic.table').directive('genericTable', function() {
     $scope.previousPage = function(){
         $scope.currentPage --;
         pagination($scope.pages.length,$scope.currentPage);
-        $scope.$emit('gt-started-rendering');
+        $scope.$emit('gt-started-rendering',$scope.gtId);
         $scope.gtDisplayData = $scope.pages[$scope.currentPage];
     };
     $scope.setPage = function(page){
         $scope.currentPage = page;
         pagination($scope.pages.length,$scope.currentPage);
-        $scope.$emit('gt-started-rendering');
+        $scope.$emit('gt-started-rendering',$scope.gtId);
         $scope.gtDisplayData = $scope.pages[$scope.currentPage];
     };
 
@@ -282,13 +324,41 @@ angular.module('generic.table').directive('genericTable', function() {
         options = typeof options === 'undefined'? {}:options;
 
         var fileName = typeof options.fileName === 'undefined' ? 'export':options.fileName;
+
+        // fix export data
+        var exportData = JSON.parse(angular.toJson(sortedData.slice(0)));
+        for (var i = 0; i < exportData.length; i++){
+            var row = exportData[i];
+            for (var key in row) {
+                if (row.hasOwnProperty(key)) {
+                    var fieldSetting = $filter('filter')($scope.gtFields,{objectKey:key},true)[0];
+                    var tableSetting = $filter('filter')($scope.gtSettings,{objectKey:key},true)[0];
+
+                    var exportMethod = fieldSetting.export;
+
+                    // if export method is declared and is a function...
+                    if(exportMethod && angular.isFunction(exportMethod)){
+                        // ...replace export data row value with value returned by function
+                        row[key] = exportMethod(row, key);
+                    }
+                    // if export is set to false for field...
+                    if(typeof tableSetting.export !== 'undefined' && tableSetting.export === false) {
+                        // ...set value to null
+                        row[key] = null;
+                    }
+                }
+            }
+        }
+
         // declare export data
-        var data = JSON.parse(angular.toJson(sortedData.slice(0)));
+        var data = exportData;//JSON.parse(angular.toJson(sortedData.slice(0)));
+
+        var exportFields = $filter('orderBy')($filter('removeWith')($scope.gtFields,{exportField:false}),"columnOrder");
         var headers = {
             fieldSep: typeof options.fieldSep === 'undefined' ? ";":options.fieldSep,
-            header: $filter('map')($filter('orderBy')($scope.gtFields,"columnOrder"),"name"), // get headers by column order
+            header: $filter('map')(exportFields,"name"), // get headers by column order
             txtDelim: typeof options.txtDelim === 'undefined' ? '"':options.txtDelim,
-            columnOrder:$filter('map')($filter('orderBy')($scope.gtFields,"columnOrder"),"objectKey"), // get column order
+            columnOrder:$filter('map')(exportFields,"objectKey"), // get column order
             decimalSep:typeof options.decimalSep === 'undefined' ? ',':options.decimalSep,
             addByteOrderMarker:typeof options.addBom === 'undefined',
             charset:typeof options.charset === 'undefined' ? 'utf-8':options.charset
@@ -350,7 +420,7 @@ angular.module('generic.table').directive('genericTable', function() {
         restrict: 'A',
         link: function(scope, element, attrs, fn) {
             if (scope.$last){
-                scope.$emit('gt-finished-rendering');
+                scope.$emit('gt-finished-rendering',scope.gtId);
                 //scope.$parent.$parent.loading = false;
             }
         }
@@ -422,4 +492,3 @@ angular.module('generic.table').directive('genericTable', function() {
         return array.sort(dynamicSortMultiple(propertyArray));
     }
 });
-
