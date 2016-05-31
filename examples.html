@@ -11,9 +11,10 @@
                     objectKey:'name', // key for mapping column with data and totals
                     visible:true, // should column be visible
                     enabled:true, // should column be enabled (required for filters to work)
-                    sort:'enable', // sorting ('enable', 'disable', 'asc', 'desc')
+                    sort:'false', // should column be sortable
                     sortOrder:0, // sort order of column, 0 will be sorted first
-                    columnOrder:0 // column order, starting from the left with zero
+                    columnOrder:0 // column order, starting from the left with zero,
+                    export:false // should column be exported to CSV (OPTIONAL)
                 }]
             </code>
         </pre>
@@ -29,6 +30,7 @@
                     render: function(row,column){ return '&lt;span&gt;'+row[column]+'&lt;/span&gt;';} // custom function for column presentation (OPTIONAL),
                     value: function(row,column){ return row[column]/2;} // custom function for column value if no data exists for column in data array (OPTIONAL),
                     click: function(){ return console.log('column clicked);} // click function for column (OPTIONAL)
+                    export: function(row,column){ return '&lt;span&gt;'+row[column]+'&lt;/span&gt;';} // custom function for export presentation (OPTIONAL)
                 }]
             </code>
         </pre>
@@ -56,11 +58,11 @@
         <generic-table gt-data="optionsTable.data" gt-settings="optionsTable.settings" gt-fields="optionsTable.fields" gt-pagination=false></generic-table>
         <br>
         <h3>Events</h3>
-        <p>Events emitted by the table. All events include the id of the table that emitted the event.</p>
+        <p>Events emitted by the table.</p>
         <generic-table gt-data="eventsTable.data" gt-settings="eventsTable.settings" gt-fields="eventsTable.fields" gt-pagination=false></generic-table>
         <br>
         <h3>Event listeners</h3>
-        <p>Send events together with unique table id to change/update table data, table settings and field definitions. The table will also listen for changes to row length ie. how many rows should be displayed.</p>
+        <p>Use event listeners to change/update table data, table settings and field definitions. The table will also listen for changes to row length ie. how many rows should be displayed.</p>
         <generic-table gt-data="listenersTable.data" gt-settings="listenersTable.settings" gt-fields="listenersTable.fields" gt-pagination=false></generic-table>
         <br>
         <h3 id="exportOptions">Export to CSV options</h3>
@@ -166,7 +168,7 @@
             <h4>Markup</h4>
         <pre>
             <code class="line-numbers language-markup" prism>
-                &lt;generic-table gt-id=&quot;tableCustomRender.id&quot; gt-settings=&quot;tableCustomRender.settings&quot; gt-fields=&quot;tableCustomRender.fields&quot; gt-totals=&quot;tableCustomRender.totals&quot; gt-rows=&quot;25&quot;&gt;&lt;/generic-table&gt;
+                &lt;generic-table gt-settings=&quot;tableCustomRender.settings&quot; gt-fields=&quot;tableCustomRender.fields&quot; gt-totals=&quot;tableCustomRender.totals&quot; gt-rows=&quot;25&quot;&gt;&lt;/generic-table&gt;
             </code>
         </pre>
             <h4>Javascript</h4>
@@ -176,7 +178,7 @@
 
                     // Export function
                     $scope.exportCsv = function() {
-                        $scope.$broadcast('gt-export-csv:'+$scope.tableCustomRender.id);
+                        $scope.$broadcast('gt-export-csv');
                     };
 
                     // Table with custom render function
@@ -244,7 +246,7 @@
                     };
 
                     mockService.getJsonData().then(function(res){
-                        $scope.$broadcast("gt-update-table:"+$scope.tableCustomRender.id, res);
+                        $scope.$broadcast("update-table", res);
                     });
 
 
@@ -275,6 +277,6 @@
         </pre>
         </div>
         <button class="btn btn-default pull-right" ng-click="exportCsv()">Export to CSV</button>
-        <generic-table gt-id="tableCustomRender.id" gt-settings="tableCustomRender.settings" gt-fields="tableCustomRender.fields" gt-totals="tableCustomRender.totals" gt-rows="25"></generic-table>
+        <generic-table gt-settings="tableCustomRender.settings" gt-fields="tableCustomRender.fields" gt-totals="tableCustomRender.totals" gt-rows="25"></generic-table>
     </div>
 </div>

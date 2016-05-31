@@ -5,6 +5,11 @@ Release History
 ### Added
 - Support for expanding rows
 
+# [1.0.7] - 2016-05-31
+### Added
+- Support for custom display function for export to CSV
+- Table wrapper that can be used for table scroll
+
 ## [1.0.6] - 2016-05-25
 ### Added
 - Support for reusing or forcing sorting when table structure is updated using `$scope.$broadcast('gt-update-structure:tableId', table);` where table should be an object containing 'settings' (array) and 'fields' (array) and optionally 'forceSorting' (boolean)

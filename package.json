@@ -1,6 +1,6 @@
 {
   "name": "generic-table",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "devDependencies": {
     "bower": "1.6.2",
     "bower-art-resolver": "^2.0.1",

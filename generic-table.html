@@ -1,20 +1,22 @@
 <div class="generic-table">
-    <table class="table table-sortable" ng-if="gtHasData" ng-class="gtClasses">
-        <thead>
-        <tr ng-class="::gtRowTransition ? 'fade-in animate':''">
-            <th ng-repeat="field in ::gtFields | orderBy:'columnOrder' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:'visible'" ng-class=":gtRefresh:[field.classNames, (field.objectKey | camelToDash) + '-column', 'sort-'+(gtSettings | getProperty:field.objectKey:'sort')]"><span ng-click=":gtRefresh:(gtSettings | getProperty:field.objectKey:'sort') === 'enable' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:'sort') === 'asc' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:'sort') === 'desc' ? sort(field.objectKey):''">{{::field.name}}</span></th>
-        </tr>
-        <tr ng-if="gtTotals" ng-class="::gtRowTransition ? 'fade-in animate':''">
-            <td ng-repeat="field in ::gtFields | orderBy:'columnOrder' track by field.objectKey" class="total-column" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:'visible'" ng-class="::[(gtFields | getProperty:field.objectKey:'classNames'), (field.objectKey | camelToDash) + '-column']" ng-bind-html="::gtFields | gtRender:gtTotals:field.objectKey"></td>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="row in gtDisplayData | limitTo: displayRows" gt-event ng-class="::gtRowTransition ? 'fade-in animate':''">
-            <td ng-repeat="field in ::gtFields | orderBy:'columnOrder' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:'visible'" ng-class="::[(gtFields | getProperty:field.objectKey:'classNames'), (field.objectKey | camelToDash) + '-column']"><span ng-class="::field.click ? 'gt-click-enabled':''" ng-bind-html="::gtFields | gtRender:row:field.objectKey" ng-click="::!field.click || field.click(row)"></span></td>
-        </tr>
-        </tbody>
-        <tr ng-if="pagination === false"><td class="gt-no-data" colspan="{{:gtRefresh:(gtSettings | filter:{'visible':true}:true).length}}">{{::gtNoDataTxt}}</td></t></tr>
-    </table>
+    <div class="gt-wrapper">
+        <table class="table table-condensed table-hover table-sortable" ng-if="gtHasData">
+            <thead>
+            <tr ng-class="::gtRowTransition ? 'fade-in animate':''">
+                <th ng-repeat="field in ::gtFields | orderBy:'columnOrder' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:'visible'" ng-class=":gtRefresh:[field.classNames, (field.objectKey | camelToDash) + '-column', 'sort-'+(gtSettings | getProperty:field.objectKey:'sort')]"><span ng-click=":gtRefresh:(gtSettings | getProperty:field.objectKey:'sort') === 'enable' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:'sort') === 'asc' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:'sort') === 'desc' ? sort(field.objectKey):''">{{::field.name}}</span></th>
+            </tr>
+            <tr ng-if="gtTotals" ng-class="::gtRowTransition ? 'fade-in animate':''">
+                <td ng-repeat="field in ::gtFields | orderBy:'columnOrder' track by field.objectKey" class="total-column" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:'visible'" ng-class="::[(gtFields | getProperty:field.objectKey:'classNames'), (field.objectKey | camelToDash) + '-column']" ng-bind-html="::gtFields | gtRender:gtTotals:field.objectKey"></td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="row in gtDisplayData | limitTo: displayRows" gt-event ng-class="::gtRowTransition ? 'fade-in animate':''">
+                <td ng-repeat="field in ::gtFields | orderBy:'columnOrder' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:'visible'" ng-class="::[(gtFields | getProperty:field.objectKey:'classNames'), (field.objectKey | camelToDash) + '-column']"><span ng-class="::field.click ? 'gt-click-enabled':''" ng-bind-html="::gtFields | gtRender:row:field.objectKey" ng-click="::!field.click || field.click(row)"></span></td>
+            </tr>
+            </tbody>
+            <tr ng-if="pagination === false"><td class="gt-no-data" colspan="{{:gtRefresh:(gtSettings | filter:{'visible':true}:true).length}}">{{::gtNoDataTxt}}</td></t></tr>
+        </table>
+    </div>
     <div class="gt-pagination text-center" ng-if="gtPagination === true && pagination !== false">
         <ul class="pagination">
             <li ng-class="{disabled: currentPage === 0}" ng-show="currentPage !== 0">
