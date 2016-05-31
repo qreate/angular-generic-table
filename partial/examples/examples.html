@@ -13,7 +13,8 @@
                     enabled:true, // should column be enabled (required for filters to work)
                     sort:'false', // should column be sortable
                     sortOrder:0, // sort order of column, 0 will be sorted first
-                    columnOrder:0 // column order, starting from the left with zero
+                    columnOrder:0 // column order, starting from the left with zero,
+                    export:false // should column be exported to CSV (OPTIONAL)
                 }]
             </code>
         </pre>
@@ -29,6 +30,7 @@
                     render: function(row,column){ return '&lt;span&gt;'+row[column]+'&lt;/span&gt;';} // custom function for column presentation (OPTIONAL),
                     value: function(row,column){ return row[column]/2;} // custom function for column value if no data exists for column in data array (OPTIONAL),
                     click: function(){ return console.log('column clicked);} // click function for column (OPTIONAL)
+                    export: function(row,column){ return '&lt;span&gt;'+row[column]+'&lt;/span&gt;';} // custom function for export presentation (OPTIONAL)
                 }]
             </code>
         </pre>
