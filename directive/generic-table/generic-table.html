@@ -1,6 +1,6 @@
 <div class="generic-table">
     <div class="gt-wrapper">
-        <table class="table table-condensed table-hover table-sortable" ng-if="gtHasData">
+        <table class="table table-sortable" ng-if="gtHasData" ng-class="gtClasses">
             <thead>
             <tr ng-class="::gtRowTransition ? 'fade-in animate':''">
                 <th ng-repeat="field in ::gtFields | orderBy:'columnOrder' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:'visible'" ng-class=":gtRefresh:[field.classNames, (field.objectKey | camelToDash) + '-column', 'sort-'+(gtSettings | getProperty:field.objectKey:'sort')]"><span ng-click=":gtRefresh:(gtSettings | getProperty:field.objectKey:'sort') === 'enable' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:'sort') === 'asc' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:'sort') === 'desc' ? sort(field.objectKey):''">{{::field.name}}</span></th>
@@ -16,22 +16,22 @@
             </tbody>
             <tr ng-if="pagination === false"><td class="gt-no-data" colspan="{{:gtRefresh:(gtSettings | filter:{'visible':true}:true).length}}">{{::gtNoDataTxt}}</td></t></tr>
         </table>
-    </div>
-    <div class="gt-pagination text-center" ng-if="gtPagination === true && pagination !== false">
-        <ul class="pagination">
-            <li ng-class="{disabled: currentPage === 0}" ng-show="currentPage !== 0">
-                <button class="btn-link link" ng-click="previousPage()" translate="ALL.GENERAL#PAGINATION_PREVIOUS#BUTTON" ng-disabled="currentPage === 0">« Prev</button>
-            </li>
-            <li ng-show="currentPage > 3">
-                <button class="btn-link link" ng-click="setPage(0)">1</button><small>…</small>
-            </li>
-            <li style="display: inline;padding: 0 5px;" ng-repeat="page in pagination" ng-class="page === currentPage ? 'active':''"><button class="btn-link link" ng-click="setPage(page)">{{page+1}}</button></li>
-            <li ng-show="currentPage +1 < pages.length-1 && pages.length > 4">
-                <small ng-show="currentPage + 3 < pages.length">…</small><button class="btn-link link" ng-click="setPage(pages.length-1)">{{pages.length}}</button>
-            </li>
-            <li ng-class="{disabled: currentPage == pages.length}" ng-show="currentPage+1 !== pages.length">
-                <button class="btn-link link" ng-click="nextPage()" translate="ALL.GENERAL#PAGINATION_NEXT#BUTTON" ng-disabled="currentPage+1 === pages.length">Next »</button>
-            </li>
-        </ul>
+        <div class="gt-pagination text-center" ng-if="gtPagination === true && pagination !== false">
+            <ul class="pagination">
+                <li ng-class="{disabled: currentPage === 0}" ng-show="currentPage !== 0">
+                    <button class="btn-link link" ng-click="previousPage()" translate="ALL.GENERAL#PAGINATION_PREVIOUS#BUTTON" ng-disabled="currentPage === 0">« Prev</button>
+                </li>
+                <li ng-show="currentPage > 3">
+                    <button class="btn-link link" ng-click="setPage(0)">1</button><small>…</small>
+                </li>
+                <li style="display: inline;padding: 0 5px;" ng-repeat="page in pagination" ng-class="page === currentPage ? 'active':''"><button class="btn-link link" ng-click="setPage(page)">{{page+1}}</button></li>
+                <li ng-show="currentPage +1 < pages.length-1 && pages.length > 4">
+                    <small ng-show="currentPage + 3 < pages.length">…</small><button class="btn-link link" ng-click="setPage(pages.length-1)">{{pages.length}}</button>
+                </li>
+                <li ng-class="{disabled: currentPage == pages.length}" ng-show="currentPage+1 !== pages.length">
+                    <button class="btn-link link" ng-click="nextPage()" translate="ALL.GENERAL#PAGINATION_NEXT#BUTTON" ng-disabled="currentPage+1 === pages.length">Next »</button>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
