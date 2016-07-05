@@ -356,10 +356,9 @@ angular.module('generic.table').controller('DocumentationController',function($s
         }]
     };
 
-}).controller('CustomRenderExampleController',function($scope, mockService,$filter,$sce){
+}).controller('CustomRenderExampleController',function($scope, mockService){
 
     $scope.exportCsv = function() {
-        console.log($scope.tableCustomRender.id);
         $scope.$broadcast('gt-export-csv:'+$scope.tableCustomRender.id);
     };
 
@@ -395,6 +394,14 @@ angular.module('generic.table').controller('DocumentationController',function($s
                 sort:'enable',
                 sortOrder:0,
                 columnOrder:2
+            },{
+                objectKey:'details',
+                visible:true,
+                enabled:true,
+                sort:'disable',
+                sortOrder:0,
+                columnOrder:5,
+                export:false
             }
 
         ],
@@ -404,7 +411,7 @@ angular.module('generic.table').controller('DocumentationController',function($s
                 type:"STRING",
                 objectKey:'favoriteColor',
                 classNames:"text-right middle",
-                render:function(row){return $sce.trustAsHtml('<div style="float:right;width:15px;height:15px;border-radius:50%;background: '+row.favoriteColor+'"></div>')}
+                render:function(row){return '<div style="float:right;width:15px;height:15px;border-radius:50%;background: '+row.favoriteColor+'"></div>'}
             },{
                 name:"Birthday",
                 type:"DATE",
@@ -422,8 +429,16 @@ angular.module('generic.table').controller('DocumentationController',function($s
                 objectKey:'age',
                 classNames:"text-right",
                 render: function(row){return moment().diff(moment.unix(row.birthday),'years')},
-                value: function(row){return moment().diff(moment.unix(row.birthday),'years')},
-                expand:function(row){return'<custom-dir>'+ row.age +'</custom-dir>'}
+                value: function(row){return moment().diff(moment.unix(row.birthday),'years')}
+            },{
+                name:'Details',
+                type:"NUMBER",
+                objectKey:'details',
+                classNames:"text-right",
+                render: function(row, column){ return '<a>{{row.isOpen ? "Hide":"Show"}}<a/>'},
+                compile:true,
+                value: function(row){return 'details'},
+                expand:'<custom-dir></custom-dir>'
             }
         ],
         data:[]
@@ -458,10 +473,15 @@ angular.module('generic.table').controller('DocumentationController',function($s
 }).directive('customDir', function() {
     return {
         replace:true,
-        template:'<div>something</div>',
+        template:'<div><div class="pull-left"><label>Name:&nbsp;</label>{{row.fullName}}<br><label>Age:&nbsp;</label>{{row.age}}<br><label>Favorite random number:&nbsp;</label>{{randomNumber}}<br><a ng-click="update()">Update</a></div> <a class="pull-right" ng-click="close()">Close</a> </div>',
         restrict: 'E',
         link: function(scope, element, attrs, fn) {
-            console.log('custom');
+            scope.close = scope.toggleRow; // assign close function to button in directive
+            scope.randomNumber = Math.random();
+            scope.update = function(){
+                scope.randomNumber = Math.random();
+                console.log('update something');
+            };
         }
     };
-})
+});

@@ -413,35 +413,36 @@ angular.module('generic.table').directive('genericTable', function() {
 
     };
 
-}).directive('genericRow', function($compile) {
+}).directive('gtRow', function($compile) {
     return {
         restrict: 'A',
         scope:false,
         link: function(scope, element, attrs, fn) {
-            var isOpen;
+            scope.row.isOpen;
             scope.toggleRow = function(content,columns,row,key){
-                console.log(isOpen,columns);
-                if(!isOpen){
-                    var row = $compile('<tr><td colspan="'+columns+'">'+content(row,key)+'</td></tr>')(scope);
+                //console.log(isOpen,content,columns);
+                if(!scope.row.isOpen){
+                    var row = $compile('<tr class="expanded-row"><td colspan="'+columns+'">'+content+'</td></tr>')(scope);
                     element.after(row);
-                    isOpen = true;
+                    scope.row.isOpen = true;
                 } else {
                     element.next().remove();
-                    isOpen = false;
+                    scope.row.isOpen = false;
                 }
+                scope.$broadcast('$$rebind::gtRefresh'); // update bindings
                 //isOpen != isOpen;
-                console.log(isOpen);
+                //console.log(isOpen);
             };
-            scope.openRow = function(){
-                var row = '<tr><td colspan="4">Test</td></tr>';
-                element.after(row);
-            };
-            scope.closeRow = function(){
-                element.next().remove();
-            };
-            scope.$on('gt-open-row',function(){
-                console.log('open row');
-            });
+            /*scope.openRow = function(){
+             var row = '<tr><td colspan="4">Test</td></tr>';
+             element.after(row);
+             };
+             scope.closeRow = function(){
+             element.next().remove();
+             };
+             scope.$on('gt-open-row',function(){
+             console.log('open row');
+             });*/
         }
     };
 }).directive('gtEvent', function() {
@@ -454,6 +455,32 @@ angular.module('generic.table').directive('genericTable', function() {
             }
         }
     };
+}).directive('gtRender', function($compile) {
+    return {
+        restrict: 'A',
+        scope:{
+            row:'=rowData',
+            settings:'=fieldSettings',
+            compile:'=gtCompile'
+        },
+        link: function(scope, element, attrs, fn) {
+            var row = scope.row;
+            var key = scope.settings.objectKey;
+            var output;
+
+            var renderMethod = scope.settings.render;
+            if(renderMethod && angular.isFunction(renderMethod)){
+                output = renderMethod(row, key);
+            } else {
+                output = row[key];
+            }
+            if(scope.compile === true){
+                output = $compile(output)(scope.$parent); // use same scope as row
+            }
+
+            element.append(output); // add html
+        }
+    };
 }).filter('getProperty',function($filter){
     return function(settings, key,property){
         //console.log(key);
@@ -464,7 +491,7 @@ angular.module('generic.table').directive('genericTable', function() {
         }
         return output;
     }
-}).filter('gtRender',function($filter){
+}).filter('gtRender',function($filter,$compile){
     return function(settings, row, key){
         //console.log('render');
         var output;
@@ -472,7 +499,7 @@ angular.module('generic.table').directive('genericTable', function() {
         if (angular.isArray(settings)) {
             var renderMethod = $filter('filter')(settings,{objectKey:key},true)[0].render;
             if(renderMethod && angular.isFunction(renderMethod)){
-                output = renderMethod(row, key);
+                output = $compile(renderMethod(row, key))();
             } else {
                 output = row[key];
             }
@@ -483,8 +510,8 @@ angular.module('generic.table').directive('genericTable', function() {
         return output;
     }
 }).filter('camelToDash',function(){
-    return function(string){
-        return string.replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase();
+    return function(string){try{
+        return string.replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase()} catch(error){console.log('nothing to replace:', error)};
     }
 }).filter('gtSort',function(){
     return function(array, propertyArray){

@@ -2,8 +2,15 @@ Release History
 ---------------
 
 ## [Unreleased]
+
+# [1.10.0] - 2016-07-05
 ### Added
-- Support for expanding rows
+- Support for expanding rows i.e. open/close rows
+- Support for compiling fields
+- Classes for even/odd rows
+
+### Breaking changes
+- Not really a breaking change, but the render function has been altered and now uses a directive. If your app uses sanitize for html content in the render function, you don't have to do so any more, in fact you'll probably have to remove it in order for the directive to work properly. I.e. remove `$sce.trustAsHtml('<div>...</div>')` from the render function.
 
 # [1.0.9] - 2016-07-04
 ### Fixed
