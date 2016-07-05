@@ -57,6 +57,16 @@ angular.module('generic.table').controller('DocumentationController',function($s
             }
         ],
         data:[{
+            "name":"gt-id (optional)",
+            "type":"number",
+            "default":"id of table scope",
+            "description":"unique id for table, if none is passed, the scope id will be returned. Use id together with events"
+        },{
+            "name":"gt-classes (optional)",
+            "type":"string",
+            "default":"",
+            "description":"add classes to table element e.g. table-bordered, table-condensed etc. for bootstrap styles"
+        },{
             "name":"gt-data (optional)",
             "type":"array",
             "default":"",
@@ -193,21 +203,21 @@ angular.module('generic.table').controller('DocumentationController',function($s
             }
         ],
         data:[{
-            "name":"gt-update-table",
+            "name":"gt-update-table:gtId",
             "description":"update table data",
-            "options":"data array, ie. $scope.$broadcast('gt-update-table', data);"
+            "options":"data array, ie. $scope.$broadcast('gt-update-table:tableId', data);"
         },{
-            "name":"gt-update-structure",
+            "name":"gt-update-structure:gtId",
             "description":"update structure of table (settings and field definitions)",
-            "options":"object, ie. $scope.$broadcast('gt-update-structure', {fields:[],settings:[]});"
+            "options":"object, ie. $scope.$broadcast('gt-update-structure:tableId', {fields:[],settings:[]});"
         },{
-            "name":"gt-paginate-table",
+            "name":"gt-paginate-table:gtId",
             "description":"change how many rows are visible",
-            "options":"number, ie. $scope.$broadcast('gt-paginate-table', 10);"
+            "options":"number, ie. $scope.$broadcast('gt-paginate-table:tableId', 10);"
         },{
-            "name":"gt-export-csv",
+            "name":"gt-export-csv:gtId",
             "description":"export table data to csv, <a href='/#examples#exportOptions'>see all export options</a>.",
-            "options":"export settings object, ie. $scope.$broadcast('gt-export-csv', {fileName:'my-custom-export'});"
+            "options":"export settings object, ie. $scope.$broadcast('gt-export-csv:tableId', {fileName:'my-custom-export'});"
         }]
     };
 
@@ -349,7 +359,8 @@ angular.module('generic.table').controller('DocumentationController',function($s
 }).controller('CustomRenderExampleController',function($scope, mockService,$filter,$sce){
 
     $scope.exportCsv = function() {
-        $scope.$broadcast('gt-export-csv');
+        console.log($scope.tableCustomRender.id);
+        $scope.$broadcast('gt-export-csv:'+$scope.tableCustomRender.id);
     };
 
 
@@ -419,20 +430,19 @@ angular.module('generic.table').controller('DocumentationController',function($s
     };
 
     mockService.getJsonData().then(function(res){
-        $scope.$broadcast("gt-update-table", res);
+        $scope.$broadcast("gt-update-table:"+$scope.tableCustomRender.id, res);
     });
 
 
 }).factory('mockService',function($resource, $http) {
 
     /* remote service example
-    function getData () {
-        var url = 'http://example.com/json.json';
-        return $http.jsonp(url).then(function (response) {
-            return response.data;
-        });
-
-    }*/
+     function getData () {
+     var url = 'http://example.com/json.json';
+     return $http.jsonp(url).then(function (response) {
+     return response.data;
+     });
+     }*/
 
     function getJsonData(){
         var url = './partial/examples/mock-data.json';
