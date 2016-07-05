@@ -1,6 +1,73 @@
 Release History
 ---------------
-* 1/5/2016   - v1.0.3 Added message when table has no data and option for custom text
-* 22/4/2016  - v1.0.2 Added support for exporting table data to CSV, fix for column sort click function
-* 20/4/2016  - v1.0.1 Added support for custom click function for column, improved mapping function
-* 19/4/2016  - v1.0.0 Initial release of generic-tables with support for pagination, sorting, custom render function and basic events
+
+## [Unreleased]
+
+# [1.10.0] - 2016-07-05
+### Added
+- Support for expanding rows i.e. open/close rows
+- Support for compiling fields
+- Classes for even/odd rows
+
+### Breaking changes
+- Not really a breaking change, but the render function has been altered and now uses a directive. If your app uses sanitize for html content in the render function, you don't have to do so any more, in fact you'll probably have to remove it in order for the directive to work properly. I.e. remove `$sce.trustAsHtml('<div>...</div>')` from the render function.
+
+# [1.0.9] - 2016-07-04
+### Fixed
+- Missing files due to commit error
+
+# [1.0.8] - 2016-05-31
+### Fixed
+- Missing files due to commit error
+
+# [1.0.7] - 2016-05-31
+### Added
+- Support for custom display function for export to CSV
+- Table wrapper that can be used for table scroll
+
+## [1.0.6] - 2016-05-25
+### Added
+- Support for reusing or forcing sorting when table structure is updated using `$scope.$broadcast('gt-update-structure:tableId', table);` where table should be an object containing 'settings' (array) and 'fields' (array) and optionally 'forceSorting' (boolean)
+
+## [1.0.5] - 2016-05-24
+### Added
+- Support for adding class names to table element
+
+### Fixed
+- Initial sorting
+
+## [1.0.4] - 2016-05-16
+### Added
+- Support for multiple tables within same controller
+
+### Breaking changes
+- Event listeners in generic-table have changed, to update table data, settings etc. you need to pass an unique id (gt-id) ie. `$scope.$broadcast('gt-update-table:tableId', data);`
+
+## [1.0.3] - 2016-05-01
+### Added
+- Message when table has no data and option for custom text
+
+## [1.0.2] - 2016-04-22
+### Added
+- Support for exporting table data to CSV
+
+### Fixed
+- Column sort click function
+
+## [1.0.1] - 2016-04-20
+### Added
+- Support for custom click function for column
+
+### Improved
+- Mapping function
+
+## 1.0.0 - 2016-04-19
+### Added
+- Support for pagination
+- Support for sorting
+- Custom render function
+- Basic events
+
+
+
+

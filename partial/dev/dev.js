@@ -5,7 +5,7 @@ angular.module('generic.table').controller('DevController',function($scope){
 
     $scope.exportCsv = function() {
         var options = {
-          fileName:'test'
+            fileName:'test'
         };
         $scope.$broadcast('gt-export-csv',options);
     };
@@ -14,30 +14,46 @@ angular.module('generic.table').controller('DevController',function($scope){
     $scope.basicTable = {
         settings: [
             {
+                objectKey:'expandRow',
+                visible:true,
+                enabled:true,
+                sort:'enable',
+                sortOrder:1,
+                columnOrder:5
+            },{
                 objectKey:'city',
                 visible:true,
                 enabled:true,
                 sort:'enable',
                 sortOrder:1,
-                columnOrder:2
+                columnOrder:20
             },{
                 objectKey:'numberOfCats',
-                visible:true,
+                visible:false,
                 enabled:true,
                 sort:'enable',
                 sortOrder:0,
-                columnOrder:1
+                columnOrder:10
             },{
                 objectKey:'percentHappyCats',
                 visible:true,
                 enabled:true,
                 sort:'enable',
                 sortOrder:0,
-                columnOrder:0
+                columnOrder:5
             }
 
         ],
         fields:[
+            {
+                name:'Number of cats',
+                objectKey:'expandRow',
+                className:'expand',
+                expand:'<custom-dir></custom-dir>',
+                render:function(row, column){ return '<a>{{row.isOpen ? "Hide":"Show"}}<a/>'},
+                compile:true,
+                value:function(row){ return 'expand';}
+            },
             {
                 name:'City',
                 type:"STRING",
@@ -58,7 +74,37 @@ angular.module('generic.table').controller('DevController',function($scope){
                 value:function(row){ return row.numberOfCats/(row.numberOfCats*1.2);}
             }
         ],
-        data:[]
+        data:[{
+            "city": "Juliaca",
+            "numberOfCats": 149639
+        }, {
+            "city": "Watergrasshill",
+            "numberOfCats": 436290
+        }, {
+            "city": "Dondar Quşçu",
+            "numberOfCats": 725965
+        }, {
+            "city": "Florida",
+            "numberOfCats": 258855
+        }, {
+            "city": "Sosnovyy Bor",
+            "numberOfCats": 486188
+        }, {
+            "city": "Bogdanovich",
+            "numberOfCats": 691411
+        }, {
+            "city": "Zaragoza",
+            "numberOfCats": 304539
+        }, {
+            "city": "Karlstad",
+            "numberOfCats": 364097
+        }, {
+            "city": "Tanjay",
+            "numberOfCats": 970819
+        }, {
+            "city": "Troparëvo",
+            "numberOfCats": 768663
+        }]
     };
 
 });

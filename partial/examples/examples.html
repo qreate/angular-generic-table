@@ -24,12 +24,14 @@
             <code class="line-numbers language-javascript" prism>
                 fields:[{
                     name:'Name', // name or label of the field, will be displayed as heading for column
-                    type:"STRING", // type of data, ie STRING, NUMBER etc.
+                    type:"STRING", // type of data, i.e. STRING, NUMBER etc (DEPRECATED).
                     objectKey:'name', // key for mapping column with settings and totals
                     classNames:"my-custom-class" // custom class names appended to the column,
                     render: function(row,column){ return '&lt;span&gt;'+row[column]+'&lt;/span&gt;';} // custom function for column presentation (OPTIONAL),
+                    compile: true // should field be compiled, true or false (OPTIONAL),
                     value: function(row,column){ return row[column]/2;} // custom function for column value if no data exists for column in data array (OPTIONAL),
-                    click: function(){ return console.log('column clicked);} // click function for column (OPTIONAL)
+                    click: function(){ return console.log('column clicked);} // click function for column (OPTIONAL),
+                    expand: "&lt;my-directive&gt;&lt;/my-directive&gt;" // expand (open/close) row when clicked and add this as content (could be a directive or plain html) (OPTIONAL),
                     export: function(row,column){ return '&lt;span&gt;'+row[column]+'&lt;/span&gt;';} // custom function for export presentation (OPTIONAL)
                 }]
             </code>
@@ -178,7 +180,7 @@
 
                     // Export function
                     $scope.exportCsv = function() {
-                        $scope.$broadcast('gt-export-csv');
+                        $scope.$broadcast('gt-export-csv:'+$scope.tableCustomRender.id);
                     };
 
                     // Table with custom render function
@@ -212,6 +214,14 @@
                                 sort:'disable',
                                 sortOrder:0,
                                 columnOrder:2
+                            },{
+                                objectKey:'details',
+                                visible:true,
+                                enabled:true,
+                                sort:'disable',
+                                sortOrder:0,
+                                columnOrder:5,
+                                export:false
                             }
 
                         ],
@@ -221,7 +231,7 @@
                                 type:"STRING",
                                 objectKey:'favoriteColor',
                                 classNames:"text-right middle",
-                                render:function(row){return $sce.trustAsHtml('<div style="float:right;width:15px;height:15px;border-radius:50%;background: '+row.favoriteColor+'"></div>')}
+                                render:function(row){return '&lt;div style="float:right;width:15px;height:15px;border-radius:50%;background: '+row.favoriteColor+'"&gt;&lt;/div&gt;'}
                             },{
                                 name:"Birthday",
                                 type:"DATE",
@@ -240,6 +250,15 @@
                                 classNames:"text-right",
                                 render: function(row){return moment().diff(moment.unix(row.birthday),'years')},
                                 value: function(row){return moment().diff(moment.unix(row.birthday),'years')}
+                            },{
+                                name:'Details',
+                                type:"NUMBER",
+                                objectKey:'details',
+                                classNames:"text-right",
+                                render: function(row, column){ return '&lt;a&gt;{{row.isOpen ? "Hide":"Show"}}&lt;/a&gt;'},
+                                compile:true,
+                                value: function(row){return 'details'},
+                                expand:'&lt;custom-dir&gt;&lt;/custom-dir&gt;'
                             }
                         ],
                         data:[]
@@ -272,11 +291,25 @@
                     return {
                         "getJsonData":getJsonData
                     };
+                }).directive('customDir', function() {
+                    return {
+                        replace:true,
+                        template:'&lt;div&gt;&lt;div class="pull-left"&gt;&lt;label&gt;Name:&nbsp;&lt;/label&gt;{{row.fullName}}&lt;br&gt;&lt;label&gt;Age:&nbsp;&lt;/label&gt;{{row.age}}&lt;br&gt;&lt;label&gt;Favorite random number:&nbsp;&lt;/label&gt;{{randomNumber}}&lt;br&gt;&lt;a ng-click="update()"&gt;Update&lt;/a&gt;&lt;/div&gt; &lt;a class="pull-right" ng-click="close()"&gt;Close&lt;/a&gt; &lt;/div&gt;',
+                        restrict: 'E',
+                        link: function(scope, element, attrs, fn) {
+                            scope.close = scope.toggleRow; // assign close function to button in directive
+                            scope.randomNumber = Math.random();
+                            scope.update = function(){
+                                scope.randomNumber = Math.random();
+                                console.log('update something');
+                            };
+                        }
+                    };
                 });
             </code>
         </pre>
         </div>
         <button class="btn btn-default pull-right" ng-click="exportCsv()">Export to CSV</button>
-        <generic-table gt-settings="tableCustomRender.settings" gt-fields="tableCustomRender.fields" gt-totals="tableCustomRender.totals" gt-rows="25"></generic-table>
+        <generic-table gt-settings="tableCustomRender.settings" gt-fields="tableCustomRender.fields" gt-totals="tableCustomRender.totals" gt-rows="25" gt-id="tableCustomRender.id"></generic-table>
     </div>
 </div>
