@@ -411,7 +411,8 @@ angular.module('generic.table').controller('DocumentationController',function($s
                 objectKey:'age',
                 classNames:"text-right",
                 render: function(row){return moment().diff(moment.unix(row.birthday),'years')},
-                value: function(row){return moment().diff(moment.unix(row.birthday),'years')}
+                value: function(row){return moment().diff(moment.unix(row.birthday),'years')},
+                expand:function(row){return'<custom-dir>'+ row.age +'</custom-dir>'}
             }
         ],
         data:[]
@@ -444,4 +445,13 @@ angular.module('generic.table').controller('DocumentationController',function($s
     return {
         "getJsonData":getJsonData
     };
-});
+}).directive('customDir', function() {
+    return {
+        replace:true,
+        template:'<div>something</div>',
+        restrict: 'E',
+        link: function(scope, element, attrs, fn) {
+            console.log('custom');
+        }
+    };
+})

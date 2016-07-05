@@ -345,6 +345,37 @@ angular.module('generic.table').directive('genericTable', function() {
 
     };
 
+}).directive('genericRow', function($compile) {
+    return {
+        restrict: 'A',
+        scope:false,
+        link: function(scope, element, attrs, fn) {
+            var isOpen;
+            scope.toggleRow = function(content,columns,row,key){
+                console.log(isOpen,columns);
+                if(!isOpen){
+                    var row = $compile('<tr><td colspan="'+columns+'">'+content(row,key)+'</td></tr>')(scope);
+                    element.after(row);
+                    isOpen = true;
+                } else {
+                    element.next().remove();
+                    isOpen = false;
+                }
+                //isOpen != isOpen;
+                console.log(isOpen);
+            };
+            scope.openRow = function(){
+                var row = '<tr><td colspan="4">Test</td></tr>';
+                element.after(row);
+            };
+            scope.closeRow = function(){
+                element.next().remove();
+            };
+            scope.$on('gt-open-row',function(){
+                console.log('open row');
+            });
+        }
+    };
 }).directive('gtEvent', function() {
     return {
         restrict: 'A',
