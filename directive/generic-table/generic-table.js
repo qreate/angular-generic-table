@@ -491,24 +491,6 @@ angular.module('generic.table').directive('genericTable', function() {
         }
         return output;
     }
-}).filter('gtRender',function($filter,$compile){
-    return function(settings, row, key){
-        //console.log('render');
-        var output;
-        //var output = angular.isArray(settings) ? $filter('filter')(settings,{objectKey:key},true)[0][key]: row[key];
-        if (angular.isArray(settings)) {
-            var renderMethod = $filter('filter')(settings,{objectKey:key},true)[0].render;
-            if(renderMethod && angular.isFunction(renderMethod)){
-                output = $compile(renderMethod(row, key))();
-            } else {
-                output = row[key];
-            }
-        } else {
-            output = row[key];
-        }
-
-        return output;
-    }
 }).filter('camelToDash',function(){
     return function(string){try{
         return string.replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase()} catch(error){console.log('nothing to replace:', error)};

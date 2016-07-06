@@ -6,7 +6,7 @@
                 <th ng-repeat="field in ::gtFields | orderBy:'columnOrder' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:'visible'" ng-class=":gtRefresh:[field.classNames, (field.objectKey | camelToDash) + '-column', 'sort-'+(gtSettings | getProperty:field.objectKey:'sort')]"><span ng-click=":gtRefresh:(gtSettings | getProperty:field.objectKey:'sort') === 'enable' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:'sort') === 'asc' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:'sort') === 'desc' ? sort(field.objectKey):''">{{::field.name}}</span></th>
             </tr>
             <tr ng-if="gtTotals" ng-class="::gtRowTransition ? 'fade-in animate':''">
-                <td ng-repeat="field in ::gtFields | orderBy:'columnOrder' track by field.objectKey" class="total-column" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:'visible'" ng-class="::[(gtFields | getProperty:field.objectKey:'classNames'), (field.objectKey | camelToDash) + '-column']" ng-bind-html="::gtFields | gtRender:gtTotals:field.objectKey"></td>
+                <td ng-repeat="field in ::gtFields | orderBy:'columnOrder' track by field.objectKey" class="total-column" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:'visible'" ng-class="::[(gtFields | getProperty:field.objectKey:'classNames'), (field.objectKey | camelToDash) + '-column']" field-settings="::field" gt-render row-data="::gtTotals" gt-compile="::field.compile"></td>
             </tr>
             </thead>
             <tbody>
