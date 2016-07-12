@@ -3,7 +3,16 @@ Release History
 
 ## [Unreleased]
 
-# [1.10.0] - 2016-07-05
+# [1.2.0] - 2016-07-12
+### Added
+- Support for table search
+- Support for table filters
+
+# [1.1.1] - 2016-07-06
+### Fixed
+- Totals row used old filter
+
+# [1.1.0] - 2016-07-05
 ### Added
 - Support for expanding rows i.e. open/close rows
 - Support for compiling fields

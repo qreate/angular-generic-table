@@ -7,9 +7,13 @@ angular.module('generic.table').controller('DevController',function($scope){
         var options = {
             fileName:'test'
         };
-        $scope.$broadcast('gt-export-csv',options);
+        $scope.$broadcast('gt-export-csv:'+$scope.basicTableId,options);
     };
 
+    $scope.searchTable = function(string){
+        console.log(string);
+        $scope.$broadcast('gt-search-table:'+$scope.basicTableId,string);
+    };
     // Basic table with static data
     $scope.basicTable = {
         settings: [
@@ -52,7 +56,8 @@ angular.module('generic.table').controller('DevController',function($scope){
                 expand:'<custom-dir></custom-dir>',
                 render:function(row, column){ return '<a>{{row.isOpen ? "Hide":"Show"}}<a/>'},
                 compile:true,
-                value:function(row){ return 'expand';}
+                value:function(row){ return 'expand';},
+                search:false
             },
             {
                 name:'City',

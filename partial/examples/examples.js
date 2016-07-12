@@ -154,6 +154,9 @@ angular.module('generic.table').controller('DocumentationController',function($s
         },{
             "name":"gt-finished-data-processing",
             "description":"emitted when data processing has finished"
+        },{
+            "name":"gt-table-filtered",
+            "description":"emitted when table has been filtered, object containing: total, filtered, showingFrom, showingTo, pageLength, currentPage and numberOfPages."
         }]
     };
 
@@ -206,6 +209,14 @@ angular.module('generic.table').controller('DocumentationController',function($s
             "name":"gt-update-table:gtId",
             "description":"update table data",
             "options":"data array, ie. $scope.$broadcast('gt-update-table:tableId', data);"
+        },{
+            "name":"gt-search-table:gtId",
+            "description":"search (filter) table using search terms, separate terms with space",
+            "options":"search string, ie. $scope.$broadcast('gt-search-table:tableId', 'my search string');"
+        },{
+            "name":"gt-filter-table:gtId",
+            "description":"filter table data by property (objectKey)",
+            "options":"filter object, ie. $scope.$broadcast('gt-filter-table:tableId', {objectKey1:['value1','value2'], objectKey2:[0,1,2]});"
         },{
             "name":"gt-update-structure:gtId",
             "description":"update structure of table (settings and field definitions)",
@@ -358,10 +369,35 @@ angular.module('generic.table').controller('DocumentationController',function($s
 
 }).controller('CustomRenderExampleController',function($scope, mockService){
 
+    // function for exporting to csv
     $scope.exportCsv = function() {
         $scope.$broadcast('gt-export-csv:'+$scope.tableCustomRender.id);
     };
 
+    // function for searching table
+    $scope.searchTable = function(string) {
+        $scope.$broadcast('gt-search-table:'+$scope.tableCustomRender.id,string);
+    };
+
+    // listen for table info events
+    $scope.$on('gt-table-filtered',function(event,arg){
+        $scope.tableInfo = arg;
+    });
+
+    // function for applying filters
+    $scope.applyFilters = function() {
+        var filters = {
+            'fullName':['Gregory Little','Billy Gilbert','Jason Snyder','Brandon Austin'],
+            'age':[53,39,18]
+        };
+        $scope.$broadcast('gt-filter-table:'+$scope.tableCustomRender.id,filters);
+    };
+
+    // function for resetting filters
+    $scope.resetFilters = function() {
+        var filters = {};
+        $scope.$broadcast('gt-filter-table:'+$scope.tableCustomRender.id,filters);
+    };
 
     // Table with custom render function
     $scope.tableCustomRender = {
@@ -370,7 +406,7 @@ angular.module('generic.table').controller('DocumentationController',function($s
                 objectKey:'fullName',
                 visible:true,
                 enabled:true,
-                sort:'enable',
+                sort:'asc',
                 sortOrder:0,
                 columnOrder:0
             },{
@@ -411,7 +447,8 @@ angular.module('generic.table').controller('DocumentationController',function($s
                 type:"STRING",
                 objectKey:'favoriteColor',
                 classNames:"text-right middle",
-                render:function(row){return '<div style="float:right;width:15px;height:15px;border-radius:50%;background: '+row.favoriteColor+'"></div>'}
+                render:function(row){return '<div style="float:right;width:15px;height:15px;border-radius:50%;background: '+row.favoriteColor+'"></div>'},
+                search:false
             },{
                 name:"Birthday",
                 type:"DATE",
@@ -438,7 +475,8 @@ angular.module('generic.table').controller('DocumentationController',function($s
                 render: function(row, column){ return '<a>{{row.isOpen ? "Hide":"Show"}}<a/>'},
                 compile:true,
                 value: function(row){return 'details'},
-                expand:'<custom-dir></custom-dir>'
+                expand:'<custom-dir></custom-dir>',
+                search:false
             }
         ],
         data:[]
@@ -476,6 +514,7 @@ angular.module('generic.table').controller('DocumentationController',function($s
         template:'<div><div class="pull-left"><label>Name:&nbsp;</label>{{row.fullName}}<br><label>Age:&nbsp;</label>{{row.age}}<br><label>Favorite random number:&nbsp;</label>{{randomNumber}}<br><a ng-click="update()">Update</a></div> <a class="pull-right" ng-click="close()">Close</a> </div>',
         restrict: 'E',
         link: function(scope, element, attrs, fn) {
+            console.log(scope.row); // log row object
             scope.close = scope.toggleRow; // assign close function to button in directive
             scope.randomNumber = Math.random();
             scope.update = function(){
