@@ -23,16 +23,18 @@
         <pre>
             <code class="line-numbers language-javascript" prism>
                 fields:[{
-                    name:'Name', // name or label of the field, will be displayed as heading for column
-                    type:"STRING", // type of data, i.e. STRING, NUMBER etc (DEPRECATED).
-                    objectKey:'name', // key for mapping column with settings and totals
+                    name:'Name', // name or label of the field, will be displayed as heading for column,
+                    type:"STRING", // type of data, i.e. STRING, NUMBER etc (DEPRECATED),
+                    objectKey:'name', // key for mapping column with settings and totals,
                     classNames:"my-custom-class" // custom class names appended to the column,
                     render: function(row,column){ return '&lt;span&gt;'+row[column]+'&lt;/span&gt;';} // custom function for column presentation (OPTIONAL),
-                    compile: true // should field be compiled, true or false (OPTIONAL),
+                    compile: true // should field be compiled, true or false, false by default (OPTIONAL),
                     value: function(row,column){ return row[column]/2;} // custom function for column value if no data exists for column in data array (OPTIONAL),
                     click: function(){ return console.log('column clicked);} // click function for column (OPTIONAL),
                     expand: "&lt;my-directive&gt;&lt;/my-directive&gt;" // expand (open/close) row when clicked and add this as content (could be a directive or plain html) (OPTIONAL),
-                    export: function(row,column){ return '&lt;span&gt;'+row[column]+'&lt;/span&gt;';} // custom function for export presentation (OPTIONAL)
+                    export: function(row,column){ return '&lt;span&gt;'+row[column]+'&lt;/span&gt;';} // custom function for export presentation (OPTIONAL),
+                    search: false // should field be searchable, true or false, true by default (OPTIONAL)
+
                 }]
             </code>
         </pre>
@@ -74,7 +76,7 @@
     <div ng-controller="BasicExampleController">
         <br>
         <h2>Examples</h2>
-        <h3>Basic table with static data</h3>
+        <h3>Basic example with static data</h3>
         <a ng-click="example = example === true ? false:true;" class="link">
             <span ng-show="!example">Show code</span>
             <span ng-show="example">Hide code</span>
@@ -161,7 +163,23 @@
         <generic-table gt-data="basicTable.data" gt-settings="basicTable.settings" gt-fields="basicTable.fields" gt-totals="basicTable.totals" gt-rows="5"></generic-table>
     </div>
     <div ng-controller="CustomRenderExampleController">
-        <h3>Table with custom render and value function</h3>
+        <h3>Advanced example</h3>
+        <p><strong>Let’s add some features to our example!</strong><br>The example below has support for:
+        </p>
+        <strong>Table search</strong>
+        <p>Search (filter) table with input field, separate search terms with a space “ “. Use field definitions to enable search for a particular field.</p>
+        <strong>Filter table</strong>
+        <p>Filter table by one or more properties (objectKey). Reset filters by passing an empty object. This examples uses a predefined filter.</p>
+        <strong>Export to CSV</strong>
+        <p>Use custom export function on field definition to alter the exported value, remove field from export using settings.
+        </p>
+        <strong>Expanding rows</strong>
+        <p>Expand rows and show custom content, why not pass your own directive?
+            Access parent scope and row values by setting directive scope to false or if you prefer, pass row object to an isolated scope like this in the expand property of the field definition: <code>expand: &lt;my-custom-directive data-row=”row”&gt;</code>
+        </p>
+        <strong>Displaying table information</strong>
+        <p>I.e. show total number of entries, filtered entries etc.</p>
+        <br>
         <a ng-click="example = example === true ? false:true;" class="link">
             <span ng-show="!example">Show code</span>
             <span ng-show="example">Hide code</span>
@@ -170,7 +188,16 @@
             <h4>Markup</h4>
         <pre>
             <code class="line-numbers language-markup" prism>
-                &lt;generic-table gt-settings=&quot;tableCustomRender.settings&quot; gt-fields=&quot;tableCustomRender.fields&quot; gt-totals=&quot;tableCustomRender.totals&quot; gt-rows=&quot;25&quot;&gt;&lt;/generic-table&gt;
+                &lt;form class=&quot;form-inline&quot;&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;
+                        &lt;input class=&quot;form-control&quot; role=&quot;search&quot; placeholder=&quot;Search table&quot; ng-model=&quot;searchField&quot; ng-change=&quot;searchTable(searchField)&quot;/&gt;
+                    &lt;/div&gt;
+                    &lt;button class=&quot;btn btn-default&quot; ng-click=&quot;applyFilters()&quot;&gt;Apply filters&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-default&quot; ng-click=&quot;resetFilters()&quot;&gt;Reset filters&lt;/button&gt;
+                    &lt;span class=&quot;form-control-static&quot; ng-show=&quot;tableInfo.filtered!==tableInfo.total&quot;&gt;&amp;nbsp;Showing {{tableInfo.showingFrom}} to {{tableInfo.showingTo}} of {{tableInfo.filtered}} entries (filtered from a total of {{tableInfo.total}} entries).&lt;/span&gt;&amp;nbsp;
+                    &lt;button class=&quot;btn btn-default pull-right&quot; ng-click=&quot;exportCsv()&quot;&gt;Export to CSV&lt;/button&gt;
+                &lt;/form&gt;
+                &lt;generic-table gt-settings=&quot;tableCustomRender.settings&quot; gt-fields=&quot;tableCustomRender.fields&quot; gt-totals=&quot;tableCustomRender.totals&quot; gt-rows=&quot;25&quot; gt-id=&quot;tableCustomRender.id&quot;&gt;&lt;/generic-table&gt;
             </code>
         </pre>
             <h4>Javascript</h4>
@@ -178,9 +205,34 @@
             <code class="line-numbers language-javascript" prism>
                 angular.module('generic.table').controller('CustomRenderExampleController',function($scope, mockService,$filter,$sce){
 
-                    // Export function
+                    // function for exporting to csv
                     $scope.exportCsv = function() {
                         $scope.$broadcast('gt-export-csv:'+$scope.tableCustomRender.id);
+                    };
+
+                    // function for searching table
+                    $scope.searchTable = function(string) {
+                        $scope.$broadcast('gt-search-table:'+$scope.tableCustomRender.id,string);
+                    };
+
+                    // listen for table info events
+                    $scope.$on('gt-table-filtered',function(event,arg){
+                        $scope.tableInfo = arg;
+                    });
+
+                    // function for applying filters
+                    $scope.applyFilters = function() {
+                        var filters = {
+                            'fullName':['Gregory Little','Billy Gilbert','Jason Snyder','Brandon Austin'],
+                            'age':[53,39,18]
+                        };
+                        $scope.$broadcast('gt-filter-table:'+$scope.tableCustomRender.id,filters);
+                    };
+
+                    // function for resetting filters
+                    $scope.resetFilters = function() {
+                        var filters = {};
+                        $scope.$broadcast('gt-filter-table:'+$scope.tableCustomRender.id,filters);
                     };
 
                     // Table with custom render function
@@ -190,7 +242,7 @@
                                 objectKey:'fullName',
                                 visible:true,
                                 enabled:true,
-                                sort:'enable',
+                                sort:'asc',
                                 sortOrder:0,
                                 columnOrder:0
                             },{
@@ -231,7 +283,8 @@
                                 type:"STRING",
                                 objectKey:'favoriteColor',
                                 classNames:"text-right middle",
-                                render:function(row){return '&lt;div style="float:right;width:15px;height:15px;border-radius:50%;background: '+row.favoriteColor+'"&gt;&lt;/div&gt;'}
+                                render:function(row){return '&lt;div style="float:right;width:15px;height:15px;border-radius:50%;background: '+row.favoriteColor+'"&gt;&lt;/div&gt;'},
+                                search:false
                             },{
                                 name:"Birthday",
                                 type:"DATE",
@@ -258,7 +311,8 @@
                                 render: function(row, column){ return '&lt;a&gt;{{row.isOpen ? "Hide":"Show"}}&lt;/a&gt;'},
                                 compile:true,
                                 value: function(row){return 'details'},
-                                expand:'&lt;custom-dir&gt;&lt;/custom-dir&gt;'
+                                expand:'&lt;custom-dir&gt;&lt;/custom-dir&gt;',
+                                search:false
                             }
                         ],
                         data:[]
@@ -297,6 +351,7 @@
                         template:'&lt;div&gt;&lt;div class="pull-left"&gt;&lt;label&gt;Name:&nbsp;&lt;/label&gt;{{row.fullName}}&lt;br&gt;&lt;label&gt;Age:&nbsp;&lt;/label&gt;{{row.age}}&lt;br&gt;&lt;label&gt;Favorite random number:&nbsp;&lt;/label&gt;{{randomNumber}}&lt;br&gt;&lt;a ng-click="update()"&gt;Update&lt;/a&gt;&lt;/div&gt; &lt;a class="pull-right" ng-click="close()"&gt;Close&lt;/a&gt; &lt;/div&gt;',
                         restrict: 'E',
                         link: function(scope, element, attrs, fn) {
+                            console.log(scope.row); // log row object
                             scope.close = scope.toggleRow; // assign close function to button in directive
                             scope.randomNumber = Math.random();
                             scope.update = function(){
@@ -309,7 +364,15 @@
             </code>
         </pre>
         </div>
-        <button class="btn btn-default pull-right" ng-click="exportCsv()">Export to CSV</button>
+        <br/>
+        <br/>
+        <form class="form-inline">
+            <input class="form-control" role="search" placeholder="Search table" ng-model="searchField" ng-change="searchTable(searchField)"/>
+            <button class="btn btn-default" ng-click="applyFilters()">Apply predefined filters</button>
+            <button class="btn btn-default" ng-click="resetFilters()">Reset filters</button>
+            <span class="form-control-static" ng-show="tableInfo.filtered!==tableInfo.total">&nbsp;Showing {{tableInfo.showingFrom}} to {{tableInfo.showingTo}} of {{tableInfo.filtered}} entries (filtered from a total of {{tableInfo.total}} entries).</span>&nbsp;
+            <button class="btn btn-default pull-right" ng-click="exportCsv()">Export to CSV</button>
+        </form>
         <generic-table gt-settings="tableCustomRender.settings" gt-fields="tableCustomRender.fields" gt-totals="tableCustomRender.totals" gt-rows="25" gt-id="tableCustomRender.id"></generic-table>
     </div>
 </div>

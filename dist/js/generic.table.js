@@ -1,4 +1,4 @@
-!function(e){try{e=angular.module("generic.table")}catch(t){e=angular.module("generic.table",[])}e.run(["$templateCache",function(e){e.put("directive/generic-table/generic-table.html",'<div class="generic-table"><div class="gt-wrapper"><table class="table table-sortable" ng-if="gtHasData" ng-class="gtClasses"><thead><tr ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><th ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class=":gtRefresh:[field.classNames, (field.objectKey | camelToDash) + \'-column\', \'sort-\'+(gtSettings | getProperty:field.objectKey:\'sort\')]"><span ng-click=":gtRefresh:(gtSettings | getProperty:field.objectKey:\'sort\') === \'enable\' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:\'sort\') === \'asc\' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:\'sort\') === \'desc\' ? sort(field.objectKey):\'\'">{{::field.name}}</span></th></tr><tr ng-if="gtTotals" ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><td ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" class="total-column" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class="::[(gtFields | getProperty:field.objectKey:\'classNames\'), (field.objectKey | camelToDash) + \'-column\']" ng-bind-html="::gtFields | gtRender:gtTotals:field.objectKey"></td></tr></thead><tbody><tr gt-row="" ng-repeat="row in gtDisplayData | limitTo: displayRows" gt-event="" ng-class=":gtRefresh:[gtRowTransition ? \'fade-in animate\':\'\',row.isOpen ? \'row-open\':\'\', $index % 2 == 0 ? \'row-odd\':\'row-even\']"><td ng-repeat="field in gtFields | orderBy:\'columnOrder\' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class="::[(gtFields | getProperty:field.objectKey:\'classNames\'), (field.objectKey | camelToDash) + \'-column\']"><span ng-class="::field.click ? \'gt-click-enabled\':\'\'" field-settings="::field" gt-render="" row-data="::row" gt-compile="::field.compile" ng-click=":gtRefresh:!field.click || field.click(row);!field.expand || toggleRow(field.expand,(gtSettings | filter:{\'visible\':true}:true).length,row,field.objectKey);"></span></td></tr></tbody><tr ng-if="pagination === false"><td class="gt-no-data" colspan="{{:gtRefresh:(gtSettings | filter:{\'visible\':true}:true).length}}">{{::gtNoDataTxt}}</td></tr></table><div class="gt-pagination text-center" ng-if="gtPagination === true && pagination !== false"><ul class="pagination"><li ng-class="{disabled: currentPage === 0}" ng-show="currentPage !== 0"><button class="btn-link link" ng-click="previousPage()" translate="ALL.GENERAL#PAGINATION_PREVIOUS#BUTTON" ng-disabled="currentPage === 0">&laquo; Prev</button></li><li ng-show="currentPage > 3"><button class="btn-link link" ng-click="setPage(0)">1</button><small>&hellip;</small></li><li style="display: inline;padding: 0 5px;" ng-repeat="page in pagination" ng-class="page === currentPage ? \'active\':\'\'"><button class="btn-link link" ng-click="setPage(page)">{{page+1}}</button></li><li ng-show="currentPage +1 < pages.length-1 && pages.length > 4"><small ng-show="currentPage + 3 < pages.length">&hellip;</small><button class="btn-link link" ng-click="setPage(pages.length-1)">{{pages.length}}</button></li><li ng-class="{disabled: currentPage == pages.length}" ng-show="currentPage+1 !== pages.length"><button class="btn-link link" ng-click="nextPage()" translate="ALL.GENERAL#PAGINATION_NEXT#BUTTON" ng-disabled="currentPage+1 === pages.length">Next &raquo;</button></li></ul></div></div></div>')}])}();
+!function(e){try{e=angular.module("generic.table")}catch(t){e=angular.module("generic.table",[])}e.run(["$templateCache",function(e){e.put("directive/generic-table/generic-table.html",'<div class="generic-table"><div class="gt-wrapper"><table class="table table-sortable" ng-if="gtHasData" ng-class=":gtRefresh:gtClasses"><thead><tr ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><th ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class=":gtRefresh:[field.classNames, (field.objectKey | camelToDash) + \'-column\', \'sort-\'+(gtSettings | getProperty:field.objectKey:\'sort\')]"><span ng-click=":gtRefresh:(gtSettings | getProperty:field.objectKey:\'sort\') === \'enable\' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:\'sort\') === \'asc\' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:\'sort\') === \'desc\' ? sort(field.objectKey):\'\'">{{::field.name}}</span></th></tr><tr ng-if=":gtRefresh:gtTotals" ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><td ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" class="total-column" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class="::[(gtFields | getProperty:field.objectKey:\'classNames\'), (field.objectKey | camelToDash) + \'-column\']" field-settings="::field" gt-render="" row-data="::gtTotals" gt-compile="::field.compile"></td></tr></thead><tbody><tr gt-row="" ng-repeat="row in :gtRefresh:gtDisplayData | limitTo: displayRows" gt-event="" ng-class=":gtRefresh:[gtRowTransition ? \'fade-in animate\':\'\',row.isOpen ? \'row-open\':\'\', $index % 2 == 0 ? \'row-odd\':\'row-even\']"><td ng-repeat="field in :gtRefresh:gtFields | orderBy:\'columnOrder\' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class="::[(gtFields | getProperty:field.objectKey:\'classNames\'), (field.objectKey | camelToDash) + \'-column\']"><span ng-class="::field.click ? \'gt-click-enabled\':\'\'" field-settings="::field" gt-render="" row-data="::row" gt-compile="::field.compile" ng-click=":gtRefresh:!field.click || field.click(row);!field.expand || toggleRow(field.expand,(gtSettings | filter:{\'visible\':true}:true).length,row,field.objectKey);"></span></td></tr></tbody><tr ng-if=":gtRefresh:pagination === false"><td class="gt-no-data" colspan="{{:gtRefresh:(gtSettings | filter:{\'visible\':true}:true).length}}">{{::gtNoDataTxt}}</td></tr></table><div class="gt-pagination text-center" ng-if=":gtRefresh:gtPagination === true && pagination !== false"><ul class="pagination"><li ng-class=":gtRefresh:{disabled: currentPage === 0}" ng-show="currentPage !== 0"><button class="btn-link link" ng-click="previousPage()" translate="ALL.GENERAL#PAGINATION_PREVIOUS#BUTTON" ng-disabled=":gtRefresh:currentPage === 0">&laquo; Prev</button></li><li ng-show=":gtRefresh:currentPage > 3"><button class="btn-link link" ng-click="setPage(0)">1</button><small>&hellip;</small></li><li style="display: inline;padding: 0 5px;" ng-repeat="page in :gtRefresh:pagination" ng-class=":gtRefresh:page === currentPage ? \'active\':\'\'"><button class="btn-link link" ng-click="setPage(page)">{{page+1}}</button></li><li ng-show=":gtRefresh:currentPage +1 < pages.length-1 && pages.length > 4"><small ng-show=":gtRefresh:currentPage + 3 < pages.length">&hellip;</small><button class="btn-link link" ng-click="setPage(pages.length-1)">{{pages.length}}</button></li><li ng-class=":gtRefresh:{disabled: currentPage == pages.length}" ng-show=":gtRefresh:currentPage+1 !== pages.length"><button class="btn-link link" ng-click="nextPage()" translate="ALL.GENERAL#PAGINATION_NEXT#BUTTON" ng-disabled=":gtRefresh:currentPage+1 === pages.length">Next &raquo;</button></li></ul></div></div></div>')}])}();
 /**
  * @ngdoc directive
  * @name generic.table.directive:genericTable
@@ -43,7 +43,12 @@ angular.module('generic.table').directive('genericTable', function() {
 }).controller('genericTableController',function($scope,$filter,$timeout, CSV,$document){
     var originalData; // original untouched data
     var mappedData; // mapped data, array containing mapped keys used by table
+    var filteredData; // filtered mapped data
     var sortedData; // sorted mapped data
+    var searchColumns; // columns to search
+    var tableFilters; // filters applied to the table internally
+    var searchTerms; // search terms used for searching table
+
     var sorting = typeof $scope.gtSettings === 'undefined' ? false:$filter('map')($filter('filter')($scope.gtSettings,{sort:"asc desc"},function(expected, actual){
         return actual.indexOf(expected) > -1;
     }),function(sort){
@@ -53,12 +58,6 @@ angular.module('generic.table').directive('genericTable', function() {
     $scope.gtRows = typeof $scope.gtRows === 'undefined' ? 20:$scope.gtRows;
     $scope.gtNoDataTxt = typeof $scope.gtNoDataTxt === 'undefined' ? 'No table data to display':$scope.gtNoDataTxt;
     $scope.gtId = typeof $scope.gtId === 'undefined' ? $scope.$id:$scope.gtId;
-    /*$scope.table = {
-     index:$scope.gtIndex,
-     settings: $scope.gtSettings,
-     totals: $scope.gtTotals,
-     fields:$scope.gtFields
-     };*/
 
     // order columns
     $filter('map')($scope.gtSettings,function(setting){
@@ -78,7 +77,7 @@ angular.module('generic.table').directive('genericTable', function() {
         $scope.gtHasData = false;
         originalData = initData.slice(0);
         $scope.$emit('gt-started-data-processing',$scope.gtId);
-        applyFilter(initData);
+        mapKeys(initData);
     };
 
     // change data, this we update or data set
@@ -86,18 +85,14 @@ angular.module('generic.table').directive('genericTable', function() {
         $scope.gtHasData = false;
         originalData = newData.slice(0);
         $scope.$emit('gt-started-data-processing',$scope.gtId);
-        applyFilter(newData);
-    };
-
-    // internal filter, this is where we apply filters
-    var applyFilter = function (data){
-        var filteredData = data;
-        mapKeys(filteredData);
-        filteredData.length = 0;
+        mapKeys(newData);
     };
 
     // mapping, this is where we map which keys should be part of the table array row object
     var mapKeys = function (data){
+
+        // define which fields should be searchable
+        searchColumns = $filter('map')($filter('removeWith')($scope.gtFields.slice(0),{search:false}),'objectKey');
 
         // get key names from settings
         var properties = $filter('map')($filter('filter')($scope.gtSettings, {enabled:true},true),'objectKey');
@@ -127,14 +122,26 @@ angular.module('generic.table').directive('genericTable', function() {
             });
             return obj;
         });
-        // apply sort to our mapped array
+
+        applyFilter(mappedData)
+    };
+
+    // internal filter, this is where we apply filters
+    var applyFilter = function (data, search) {
+
+        // apply table filters
+        var filtered = $filter('filter')(data.slice(0),tableFilters,function(expected, actual){
+            return actual.indexOf(expected) > -1;
+        },true).slice(0);
+
+        // return rows where columns match entered search terms
+        filteredData = $filter('searchRow')(filtered,searchColumns, search);
         applySort();
     };
 
     // sort, this is where we sort the filtered results
     var applySort = function (){
-        sortedData = sorting !== false ? $filter('gtSort')(mappedData, sorting): mappedData;
-        $scope.$broadcast('$$rebind::gtRefresh');
+        sortedData = sorting !== false ? $filter('gtSort')(filteredData, sorting): filteredData;
         applyPagination();
     };
 
@@ -146,7 +153,6 @@ angular.module('generic.table').directive('genericTable', function() {
         $scope.$emit('gt-started-rendering');
         $scope.gtDisplayData = $scope.pages[$scope.currentPage];
         pagination($scope.pages.length,$scope.currentPage);
-
         $timeout(function(){
             $scope.$emit('gt-finished-data-processing',$scope.gtId);
             $scope.gtHasData = true;
@@ -157,6 +163,7 @@ angular.module('generic.table').directive('genericTable', function() {
          $scope.$emit('gt-finished-rendering');
          $scope.loading = false;
          }*/
+        $scope.$broadcast('$$rebind::gtRefresh');
     };
 
     // listen for update table events
@@ -164,10 +171,23 @@ angular.module('generic.table').directive('genericTable', function() {
         changeData(arg);
     });
 
+    // listen for search events
+    $scope.$on('gt-search-table:'+$scope.gtId,function(event,arg){
+        searchTerms = arg;
+        applyFilter(mappedData.slice(0),arg);
+    });
+
+    // listen for filter events
+    $scope.$on('gt-filter-table:'+$scope.gtId,function(event,arg){
+        tableFilters = arg;
+        applyFilter(mappedData.slice(0),searchTerms);
+    });
+
     // listen for update table events
     $scope.$on('gt-update-structure:'+$scope.gtId,function(event,arg){
         $scope.gtFields = arg.fields;
         $scope.gtSettings = arg.settings;
+        searchColumns = $filter('map')($filter('removeWith')($scope.gtFields.slice(0),{search:false}),'objectKey');
 
         // if no sorting is applied or if sorting is forced...
         if(sorting === false || arg.forceSorting === true) {
@@ -216,6 +236,15 @@ angular.module('generic.table').directive('genericTable', function() {
         // if total pages equals 0 ie. no data available
         if(totalPages === 0 ) {
             $scope.pagination = false;
+            $scope.$emit('gt-table-filtered', {
+                total:mappedData.length,
+                filtered:0,
+                showingFrom:0,
+                showingTo:0,
+                pageLength:$scope.gtRows,
+                currentPage:0,
+                numberOfPages:0
+            });
             return;
         }
 
@@ -251,14 +280,25 @@ angular.module('generic.table').directive('genericTable', function() {
         else if(totalPages-4 > currentPage){
             $scope.pagination = [currentPage-1,currentPage,currentPage+1, currentPage+2];
         }
+
+        $scope.$emit('gt-table-filtered', {
+            total:mappedData.length,
+            filtered:filteredData.length,
+            showingFrom:$scope.currentPage*$scope.gtRows+($scope.currentPage > 1 ? 0:1),
+            showingTo:$scope.currentPage*$scope.gtRows+$scope.gtDisplayData.length,
+            pageLength:$scope.gtRows,
+            currentPage:$scope.currentPage,
+            numberOfPages:$scope.pages.length
+        });
     };
 
     $scope.nextPage = function(){
         try {
             $scope.currentPage ++;
+            $scope.gtDisplayData = $scope.pages[$scope.currentPage];
             pagination($scope.pages.length,$scope.currentPage);
             $scope.$emit('gt-started-rendering',$scope.gtId);
-            $scope.gtDisplayData = $scope.pages[$scope.currentPage];
+            $scope.$broadcast('$$rebind::gtRefresh');
         } catch(error) {
             console.log(error);
         }
@@ -266,16 +306,26 @@ angular.module('generic.table').directive('genericTable', function() {
     };
 
     $scope.previousPage = function(){
-        $scope.currentPage --;
-        pagination($scope.pages.length,$scope.currentPage);
-        $scope.$emit('gt-started-rendering',$scope.gtId);
-        $scope.gtDisplayData = $scope.pages[$scope.currentPage];
+        try {
+            $scope.currentPage --;
+            $scope.gtDisplayData = $scope.pages[$scope.currentPage];
+            pagination($scope.pages.length,$scope.currentPage);
+            $scope.$emit('gt-started-rendering',$scope.gtId);
+            $scope.$broadcast('$$rebind::gtRefresh');
+        } catch(error) {
+            console.log(error);
+        }
     };
     $scope.setPage = function(page){
-        $scope.currentPage = page;
-        pagination($scope.pages.length,$scope.currentPage);
-        $scope.$emit('gt-started-rendering',$scope.gtId);
-        $scope.gtDisplayData = $scope.pages[$scope.currentPage];
+        try {
+            $scope.currentPage = page;
+            $scope.gtDisplayData = $scope.pages[$scope.currentPage];
+            pagination($scope.pages.length,$scope.currentPage);
+            $scope.$emit('gt-started-rendering',$scope.gtId);
+            $scope.$broadcast('$$rebind::gtRefresh');
+        } catch(error) {
+            console.log(error);
+        }
     };
 
     // sort function
@@ -419,9 +469,7 @@ angular.module('generic.table').directive('genericTable', function() {
         restrict: 'A',
         scope:false,
         link: function(scope, element, attrs, fn) {
-            scope.row.isOpen;
             scope.toggleRow = function(content,columns,row,key){
-                //console.log(isOpen,content,columns);
                 if(!scope.row.isOpen){
                     var row = $compile('<tr class="expanded-row"><td colspan="'+columns+'">'+content+'</td></tr>')(scope);
                     element.after(row);
@@ -431,19 +479,7 @@ angular.module('generic.table').directive('genericTable', function() {
                     scope.row.isOpen = false;
                 }
                 scope.$broadcast('$$rebind::gtRefresh'); // update bindings
-                //isOpen != isOpen;
-                //console.log(isOpen);
             };
-            /*scope.openRow = function(){
-             var row = '<tr><td colspan="4">Test</td></tr>';
-             element.after(row);
-             };
-             scope.closeRow = function(){
-             element.next().remove();
-             };
-             scope.$on('gt-open-row',function(){
-             console.log('open row');
-             });*/
         }
     };
 }).directive('gtEvent', function() {
@@ -492,23 +528,38 @@ angular.module('generic.table').directive('genericTable', function() {
         }
         return output;
     }
-}).filter('gtRender',function($filter,$compile){
-    return function(settings, row, key){
-        //console.log('render');
-        var output;
-        //var output = angular.isArray(settings) ? $filter('filter')(settings,{objectKey:key},true)[0][key]: row[key];
-        if (angular.isArray(settings)) {
-            var renderMethod = $filter('filter')(settings,{objectKey:key},true)[0].render;
-            if(renderMethod && angular.isFunction(renderMethod)){
-                output = $compile(renderMethod(row, key))();
-            } else {
-                output = row[key];
-            }
-        } else {
-            output = row[key];
-        }
+}).filter('searchRow',function($filter){
+    return function(array,fields,searchTerms){
 
-        return output;
+        var filteredArray = [];
+        var searchTerms = typeof searchTerms === 'undefined' ? '':searchTerms;
+        var searchTermsArray = searchTerms.toLowerCase().split(' ');
+
+        for (var i = 0; i < array.length; i++){
+            var row = array[i];
+            var string = '';
+            $filter('map')(fields,function(field){
+                string += row[field];
+            });
+            string = string.toLowerCase();
+            var match = true;
+            for (var k = 0; k < searchTermsArray.length;k++){
+                var term = searchTermsArray[k];
+                match = string.indexOf(term) !== -1;
+
+                if(!match){
+                    break;
+                    // no match
+                    //return match;
+
+                }
+            }
+            if(match){
+                //console.log('push',row);
+                filteredArray.push(row)
+            }
+        }
+        return filteredArray;
     }
 }).filter('camelToDash',function(){
     return function(string){try{
