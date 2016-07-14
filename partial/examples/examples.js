@@ -278,6 +278,14 @@ angular.module('generic.table').controller('DocumentationController',function($s
             }
         ],
         data:[{
+            "name":"fileName",
+            "description":"file name (omit file extension)",
+            "default":"export.csv"
+        },{
+            "name":"exportColumns",
+            "description":"columns to export ex. ['objectKey1','objectKey2'] overrules field settings",
+            "default":"exports all column except columns with field setting export:false"
+        },{
             "name":"fieldSep",
             "description":"field separator",
             "default":";"

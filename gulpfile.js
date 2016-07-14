@@ -395,6 +395,12 @@ gulp.task('build-gt', function() {
         'build-gt-less','build-gt-template','concat-gt-sources','build-gt-clean');
 });
 
+// build task for building generic tables
+gulp.task('build-gh-pages', function() {
+    return runSequence('build-clean',
+        'build-gt-less','build-examples-less','build-gt-template','concat-gt-sources','concat-index-sources','build-gt-clean');
+});
+
 // reload task
 gulp.task('reload',  function(){
     bs.reload();

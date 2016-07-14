@@ -58,19 +58,22 @@ angular.module('generic.table').directive('genericTable', function() {
     $scope.gtNoDataTxt = typeof $scope.gtNoDataTxt === 'undefined' ? 'No table data to display':$scope.gtNoDataTxt;
     $scope.gtId = typeof $scope.gtId === 'undefined' ? $scope.$id:$scope.gtId;
 
-    // order columns
-    $filter('map')($scope.gtSettings,function(setting){
-        try{
-            var field = $filter('filter')($scope.gtFields,{objectKey:setting.objectKey},true)[0];
-            field.columnOrder = setting.columnOrder;
-            if(setting.export === false){
-                field.exportField = false;
+    // extend field definitions
+    var extendFieldDefinitions = function() {
+        $filter('map')($scope.gtSettings,function(setting){
+            try{
+                var field = $filter('filter')($scope.gtFields,{objectKey:setting.objectKey},true)[0];
+                field.columnOrder = setting.columnOrder; // add column order
+                if(setting.export === false) {
+                    field.exportField = false; // add export field
+                }
+            } catch(error) {
+                console.log('field definition object for property: "'+ setting.objectKey +'" not found.',error);
             }
-        } catch(error) {
-            console.log('field definition object for property: "'+ setting.objectKey +'" not found.',error);
-        }
 
-    });
+        });
+    };
+    extendFieldDefinitions();
 
     var initTable = function(initData){
         $scope.gtHasData = false;
@@ -186,6 +189,7 @@ angular.module('generic.table').directive('genericTable', function() {
     $scope.$on('gt-update-structure:'+$scope.gtId,function(event,arg){
         $scope.gtFields = arg.fields;
         $scope.gtSettings = arg.settings;
+        extendFieldDefinitions();
         searchColumns = $filter('map')($filter('removeWith')($scope.gtFields.slice(0),{search:false}),'objectKey');
 
         // if no sorting is applied or if sorting is forced...
@@ -379,19 +383,27 @@ angular.module('generic.table').directive('genericTable', function() {
             var row = exportData[i];
             for (var key in row) {
                 if (row.hasOwnProperty(key)) {
-                    var fieldSetting = $filter('filter')($scope.gtFields,{objectKey:key},true)[0];
-                    var tableSetting = $filter('filter')($scope.gtSettings,{objectKey:key},true)[0];
+                    var fieldSetting = $filter('filter')($scope.gtFields, {objectKey: key}, true)[0];
+                    var tableSetting = $filter('filter')($scope.gtSettings, {objectKey: key}, true)[0];
 
                     var exportMethod = fieldSetting.export;
 
                     // if export method is declared and is a function...
-                    if(exportMethod && angular.isFunction(exportMethod)){
+                    if (exportMethod && angular.isFunction(exportMethod)) {
                         // ...replace export data row value with value returned by function
                         row[key] = exportMethod(row, key);
                     }
+
+                    // if exportColumns are passed with options...
+                    if (typeof options.exportColumns !== 'undefined') {
+                        // ...set value to null i.e. don't export column if it's not in the exportColumns array
+                        if (options.exportColumns.indexOf(tableSetting.objectKey)===-1){
+                            row[key] = null;
+                        }
+                    }
                     // if export is set to false for field...
-                    if(typeof tableSetting.export !== 'undefined' && tableSetting.export === false) {
-                        // ...set value to null
+                    else if (typeof tableSetting.export !== 'undefined' && tableSetting.export === false) {
+                        // ...set value to null i.e. don't export column
                         row[key] = null;
                     }
                 }
@@ -401,7 +413,19 @@ angular.module('generic.table').directive('genericTable', function() {
         // declare export data
         var data = exportData;//JSON.parse(angular.toJson(sortedData.slice(0)));
 
-        var exportFields = $filter('orderBy')($filter('removeWith')($scope.gtFields,{exportField:false}),"columnOrder");
+        // if exportColumns are passed with options...
+        if (typeof options.exportColumns !== 'undefined') {
+            
+            // ...get field settings for all objectKeys in exportColumns array
+            var exportFields = $filter('map')(options.exportColumns, function(objectKey){
+                return $filter('filter')($scope.gtFields.slice(0), {objectKey:objectKey}, true)[0];
+            } );
+        }
+        // else export all columns except columns not marked for export i.e. has field setting export:false (added to gtField
+        else {
+            var exportFields = $filter('orderBy')($filter('removeWith')($scope.gtFields,{exportField:false}),"columnOrder");
+        }
+
         var headers = {
             fieldSep: typeof options.fieldSep === 'undefined' ? ";":options.fieldSep,
             header: $filter('map')(exportFields,"name"), // get headers by column order
@@ -411,6 +435,7 @@ angular.module('generic.table').directive('genericTable', function() {
             addByteOrderMarker:typeof options.addBom === 'undefined',
             charset:typeof options.charset === 'undefined' ? 'utf-8':options.charset
         };
+
         CSV.stringify(data, headers).then(function(result){
 
             var blob;

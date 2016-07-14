@@ -3,6 +3,13 @@ Release History
 
 ## [Unreleased]
 
+# [1.2.1] - 2016-07-14
+### Added
+- Support for passing array with object keys i.e. columns to export function
+
+### Fixed
+- export settings and column order wasn't re-added to field definition when table structure was updated
+
 # [1.2.0] - 2016-07-12
 ### Added
 - Support for table search
