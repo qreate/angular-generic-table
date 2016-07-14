@@ -1,6 +1,12 @@
 {
-  "name": "anular-generic-table",
-  "version": "1.3.0",
+  "name": "angular-generic-table",
+  "description": "Generic Table - A generic table for Angular that leverages one time binding for fast rendering. Generic table uses standard markup for tables ie. table, tr and td elements etc. and has support for expanding rows, search, filters, sorting, pagination, export to CSV, column clicks, custom column rendering, custom export values.",
+  "version": "1.3.1",
+  "keywords": [
+    "angular",
+    "generic-table",
+    "table"
+  ],
   "main": [
     "dist/js/angular-generic-table.js",
     "dist/css/angular-generic-table.css"
@@ -8,23 +14,27 @@
   "authors": [
     "Robert Hjalmers <robert.hjalmers@gmail.com>"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qreate/angular-generic-table.git"
+  },
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
     "*",
-    "!dist/**/*"
+    "!dist/js/angular-generic-table.*",
+    "!dist/css/angular-generic-table.*"
   ],
   "dependencies": {
-    "angular": "1.4.8",
-    "angular-animate": "1.4.8",
-    "angular-filter": "0.5.8",
+    "angular": "~1.4",
+    "angular-animate": "~1.4",
+    "angular-filter": "~0.5.8",
     "angular-bind-notifier": "^1.1.6",
     "ng-csv": "^0.3.6"
   },
   "devDependencies": {
     "jquery": "~2.0",
-    "underscore": "1.8.3",
     "bootstrap": "~3.2",
     "angular-ui-router": "0.2.15",
     "angular-resource": "1.4.8",

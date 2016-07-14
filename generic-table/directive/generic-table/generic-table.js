@@ -539,7 +539,7 @@ angular.module('angular.generic.table').directive('genericTable', function() {
                 output = $compile(output)(scope.$parent); // use same scope as row
             }
 
-            element.append(output); // add html
+            element[0].innerHTML = output; // add html
         }
     };
 }).filter('getProperty',function($filter){

@@ -316,8 +316,8 @@ gulp.task('concat-gt-sources',function(){
     //var dotName = bowerfile.name.replace(/-/g, '.');
     var name = bowerfile.name;
     return gulp.src([
-            "dist/temp/*.js",
             "generic-table/generic-table.js",
+            "dist/temp/*.js",
             "generic-table/directive/generic-table/generic-table.js"])
         .pipe(sourcemaps.init())
         .pipe(concat(name+".js"))
