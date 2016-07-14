@@ -1,6 +1,6 @@
 describe('prism', function() {
 
-  beforeEach(module('generic.table'));
+  beforeEach(module('generic.table.dev'));
 
   var scope,compile;
 

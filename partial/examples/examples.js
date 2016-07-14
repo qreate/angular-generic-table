@@ -1,4 +1,4 @@
-angular.module('generic.table').controller('DocumentationController',function($scope){
+angular.module('generic.table.dev').controller('DocumentationController',function($scope){
     // Options
     $scope.optionsTable = {
         settings: [

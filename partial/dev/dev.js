@@ -1,4 +1,4 @@
-angular.module('generic.table').controller('DevController',function($scope){
+angular.module('generic.table.dev').controller('DevController',function($scope){
     var showSomething = function(id){
         console.log(id);
     };

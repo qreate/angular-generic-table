@@ -1,6 +1,6 @@
 <div class="col-md-12">
     <div ng-controller="DocumentationController">
-        <h1>Generic table</h1>
+        <h1>Generic table for Angular</h1>
         <h2>Usage</h2>
         <p>The generic-table needs three things to work: <strong>settings</strong>, <strong>field definitions</strong> and <strong>data</strong>, totals is optional.</p>
         <br>
@@ -91,7 +91,7 @@
             <h4>Javascript</h4>
             <pre>
             <code class="line-numbers language-javascript" prism>
-                angular.module('generic.table').controller('BasicExampleController',function($scope){
+                angular.module('angular.generic.table').controller('BasicExampleController',function($scope){
                     // Basic table with static data
                     $scope.basicTable = {
                         settings: [
@@ -203,7 +203,7 @@
             <h4>Javascript</h4>
         <pre>
             <code class="line-numbers language-javascript" prism>
-                angular.module('generic.table').controller('CustomRenderExampleController',function($scope, mockService,$filter,$sce){
+                angular.module('angular.generic.table').controller('CustomRenderExampleController',function($scope, mockService,$filter,$sce){
 
                     // function for exporting to csv
                     $scope.exportCsv = function() {

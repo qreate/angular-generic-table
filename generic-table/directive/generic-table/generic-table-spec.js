@@ -1,6 +1,6 @@
 describe('genericTable', function() {
 
-  beforeEach(module('generic.table'));
+  beforeEach(module('angular.generic.table'));
 
   var scope,compile;
 

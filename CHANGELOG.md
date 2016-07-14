@@ -2,6 +2,9 @@ Release History
 ---------------
 
 ## [Unreleased]
+# [1.3.0] - 2016-07-14
+### Breaking changes
+- Changed module name form 'generic.table' to 'angular.generic.table'. Source files have been changed to angular-generic-table.css and angular-generic-table.js.
 
 # [1.2.1] - 2016-07-14
 ### Added

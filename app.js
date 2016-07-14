@@ -1,15 +1,15 @@
 /**
  * @ngdoc interface
- * @name generic.table
- * @module generic.table
+ * @name generic.table.dev
+ * @module generic.table.dev
  * @description
  *
- * # generic-table (core module)
+ * # generic-table-dev (core module)
  * The generic-table module is loaded by default.
  */
-angular.module('generic.table', ['mgcrea.ngStrap','ui.router','ngAnimate','ngResource','angular.filter','angular.bind.notifier','ngSanitize', 'ngCsv']);
+angular.module('generic.table.dev', ['mgcrea.ngStrap','ui.router','ngAnimate','ngResource','angular.filter','angular.bind.notifier','ngSanitize', 'ngCsv','angular.generic.table']);
 
-angular.module('generic.table').config(function($stateProvider, $urlRouterProvider) {
+angular.module('generic.table.dev').config(function($stateProvider, $urlRouterProvider) {
 
     $stateProvider.state('examples', {
         url: '/examples',
@@ -24,7 +24,7 @@ angular.module('generic.table').config(function($stateProvider, $urlRouterProvid
 
 });
 
-angular.module('generic.table').run(function($rootScope) {
+angular.module('generic.table.dev').run(function($rootScope) {
 
     $rootScope.safeApply = function(fn) {
         var phase = $rootScope.$$phase;

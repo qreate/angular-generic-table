@@ -197,8 +197,8 @@ gulp.task('build-less', function () {
 
 // compile less files into dist css
 gulp.task('build-gt-less', function () {
-    return gulp.src(["./directive/generic-table/generic-table.less"])
-        .pipe(gulp.dest("./dist/less"))
+    return gulp.src(["./generic-table/generic-table.less"])
+        //.pipe(gulp.dest("./dist/less"))
         .pipe(gulpPrint(function(filepath) {
             return "compiling less: " + filepath;
         }))
@@ -211,33 +211,11 @@ gulp.task('build-gt-less', function () {
         .pipe(filter('generic-table.css'))
 
         //.pipe(sourcemaps.write('./'))
+        .pipe(rename("angular-generic-table.css"))
         .pipe(gulp.dest('./dist/css'))// Write the CSS & Source maps
         .pipe(filter('**/*.css')) // Filtering stream to only css files
         .pipe(cssmin()) // Minify css
-        .pipe(rename("generic-table.min.css"))
-        .pipe(gulp.dest('./dist/css'));
-});
-
-// compile less files into dist css
-gulp.task('build-gt-less', function () {
-    return gulp.src(["./directive/generic-table/generic-table.less"])
-        .pipe(gulp.dest("./dist/less"))
-        .pipe(gulpPrint(function(filepath) {
-            return "compiling less: " + filepath;
-        }))
-        //uncomment sourcemaps and run autoprefix
-        //.pipe(sourcemaps.init())
-        .pipe(less({
-            paths:['./'],
-            plugins: [autoprefix]
-        }))
-        .pipe(filter('generic-table.css'))
-
-        //.pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dist/css'))// Write the CSS & Source maps
-        .pipe(filter('**/*.css')) // Filtering stream to only css files
-        .pipe(cssmin()) // Minify css
-        .pipe(rename("generic-table.min.css"))
+        .pipe(rename("angular-generic-table.min.css"))
         .pipe(gulp.dest('./dist/css'));
 });
 
@@ -319,30 +297,32 @@ gulp.task('bump:prerelease', function () {
 
 // put html files in template cache (js file)
 gulp.task('build-gt-template',function(){
-    return gulp.src('./directive/generic-table/generic-table.html',{base:'./'})
+    return gulp.src('./generic-table/directive/generic-table/generic-table.html',{base:'./'})
         .pipe(minifyHtml({
             empty: true,
             spare: true,
             quotes: true
         }))
         .pipe(ngHtml2Js({
-            moduleName: 'generic.table'
+            moduleName: 'angular.generic.table'
         }))
-        .pipe(concat("generic.table.tpl.js"))
+        .pipe(concat("angular.generic.table.tpl.js"))
         .pipe(uglify())
         .pipe(gulp.dest("./dist/temp/"));
 });
 
 // concatenate js sources
 gulp.task('concat-gt-sources',function(){
-    var dotName = bowerfile.name.replace(/-/g, '.');
+    //var dotName = bowerfile.name.replace(/-/g, '.');
+    var name = bowerfile.name;
     return gulp.src([
             "dist/temp/*.js",
-            "directive/generic-table/generic-table.js"])
+            "generic-table/generic-table.js",
+            "generic-table/directive/generic-table/generic-table.js"])
         .pipe(sourcemaps.init())
-        .pipe(concat(dotName+".js"))
+        .pipe(concat(name+".js"))
         .pipe(gulp.dest("./dist/js/"))
-        .pipe(concat(dotName+".min.js"))
+        .pipe(concat(name+".min.js"))
         .pipe(ngAnnotate())
         .pipe(uglify({mangle: true}))
         .pipe(sourcemaps.write())

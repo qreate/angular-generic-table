@@ -16,7 +16,7 @@
  *
  * </pre>
  */
-angular.module('generic.table').directive('prism', function() {
+angular.module('generic.table.dev').directive('prism', function() {
 	return {
 		restrict: 'A',
 		link: function(scope, element, attrs, fn) {
