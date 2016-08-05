@@ -2,6 +2,10 @@ Release History
 ---------------
 
 ## [Unreleased]
+# [1.3.2] - 2016-08-05
+### Fixed
+- Minor markup error
+
 # [1.3.1] - 2016-07-14
 ### Fixed
 - Typo in bower package name and removed some unnecessary dependencies
