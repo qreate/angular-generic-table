@@ -415,7 +415,7 @@ angular.module('angular.generic.table').directive('genericTable', function() {
 
         // if exportColumns are passed with options...
         if (typeof options.exportColumns !== 'undefined') {
-            
+
             // ...get field settings for all objectKeys in exportColumns array
             var exportFields = $filter('map')(options.exportColumns, function(objectKey){
                 return $filter('filter')($scope.gtFields.slice(0), {objectKey:objectKey}, true)[0];
@@ -433,7 +433,8 @@ angular.module('angular.generic.table').directive('genericTable', function() {
             columnOrder:$filter('map')(exportFields,"objectKey"), // get column order
             decimalSep:typeof options.decimalSep === 'undefined' ? ',':options.decimalSep,
             addByteOrderMarker:typeof options.addBom === 'undefined',
-            charset:typeof options.charset === 'undefined' ? 'utf-8':options.charset
+            charset:typeof options.charset === 'undefined' ? 'utf-8':options.charset,
+            quoteStrings: typeof options.quoteStrings === 'undefined' ? false : options.quoteStrings
         };
 
         CSV.stringify(data, headers).then(function(result){
