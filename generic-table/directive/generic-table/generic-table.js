@@ -137,7 +137,7 @@ angular.module('angular.generic.table').directive('genericTable', function() {
         },true).slice(0);
 
         // return rows where columns match entered search terms
-        filteredData = $filter('searchRow')(filtered,searchColumns, search);
+        filteredData = $filter('searchRow')(filtered,searchColumns, search, $scope.gtFields);
         applySort();
     };
 
@@ -332,7 +332,19 @@ angular.module('angular.generic.table').directive('genericTable', function() {
     };
 
     // sort function
-    $scope.sort = function(property){
+    $scope.sort = function($event,property){
+        var ctrlKey = $event.ctrlKey || $event.metaKey;
+
+        // reset sorting unless ctrl key or meta key (mac) is pressed while sorting
+        if(!ctrlKey && property) {
+            for (var i = 0; $scope.gtSettings.length > i; i++){
+                var setting = $scope.gtSettings[i];
+                if(setting.objectKey !== property && setting.sort === 'asc' || setting.objectKey !== property && setting.sort === 'desc'){
+                    $scope.gtSettings[i].sort = 'enable';
+
+                }
+            }
+        }
         if (property){
             for (var i = 0; $scope.gtSettings.length > i; i++){
                 var setting = $scope.gtSettings[i];
@@ -360,7 +372,7 @@ angular.module('angular.generic.table').directive('genericTable', function() {
         sorting = $filter('map')($filter('filter')($scope.gtSettings,{sort:"asc desc"},function(expected, actual){
             return actual.indexOf(expected) > -1;
         }),function(sort){
-            return (sort.sort === 'desc' ? '-':'') + sort.objectKey
+            return (sort.sort === 'desc' ? '-':'') + sort.objectKey;
         });
 
         applySort();
@@ -391,7 +403,10 @@ angular.module('angular.generic.table').directive('genericTable', function() {
                     // if export method is declared and is a function...
                     if (exportMethod && angular.isFunction(exportMethod)) {
                         // ...replace export data row value with value returned by function
-                        row[key] = exportMethod(row, key);
+                        var exportValue = exportMethod(row, key);
+                        row[key] = fieldSetting.exportEscapeString === false ? exportValue : $filter('escapeCsvString')(exportValue);
+                    } else {
+                        row[key] = fieldSetting.exportEscapeString === false ? row[key] : $filter('escapeCsvString')(row[key]);
                     }
 
                     // if exportColumns are passed with options...
@@ -536,11 +551,14 @@ angular.module('angular.generic.table').directive('genericTable', function() {
             } else {
                 output = row[key];
             }
-            if(scope.compile === true){
-                output = $compile(output)(scope.$parent); // use same scope as row
+            if(scope.compile && scope.compile !== false){
+                // declare element scope
+                var elementScope = scope.compile !== true && scope.compile.$watch ? scope.compile:scope.$parent; // use same scope as row unless a valid scope is passed
+                output = $compile(output)(elementScope); // compile
+                element.append(output); // add html
+            } else {
+                element[0].innerHTML = output; // add html
             }
-
-            element[0].innerHTML = output; // add html
         }
     };
 }).filter('getProperty',function($filter){
@@ -553,23 +571,39 @@ angular.module('angular.generic.table').directive('genericTable', function() {
         }
         return output;
     }
-}).filter('searchRow',function($filter){
-    return function(array,fields,searchTerms){
+}).filter('searchRow',function($filter,$interpolate){
+    return function(array,fields,searchTerms,fieldsSettings){
+        //console.log(array,fields,fieldsSettings);
+        var search = {};
+        for(var k = 0; k < fieldsSettings.length;k++){
+            //console.log(array[k]);
+            var fieldSetting = fieldsSettings[k];
+            if(fieldSetting.search && angular.isFunction(fieldSetting.search)){
+                var objectKey = fieldSetting.objectKey;
+                search[objectKey] = fieldSetting.search;
+            }
+        }
 
+        if(!searchTerms || searchTerms.replace(/"/g,"").length === 0){
+            return array;
+        }
         var filteredArray = [];
-        var searchTerms = typeof searchTerms === 'undefined' ? '':searchTerms;
-        var searchTermsArray = searchTerms.toLowerCase().split(' ');
+        searchTerms = typeof searchTerms === 'undefined' ? '':searchTerms;
+        var searchTermsArray = searchTerms.toLowerCase().match(/"[^"]+"|[\w]+/g);
 
         for (var i = 0; i < array.length; i++){
             var row = array[i];
             var string = '';
+            var j = 0;
             $filter('map')(fields,function(field){
-                string += row[field];
+                var separator = j === 0 ? '':' & ';
+                string += search[field] ? separator+search[field](row,field):separator+row[field];
+                j++;
             });
             string = string.toLowerCase();
             var match = true;
             for (var k = 0; k < searchTermsArray.length;k++){
-                var term = searchTermsArray[k];
+                var term = searchTermsArray[k].replace(/"/g,'');
                 match = string.indexOf(term) !== -1;
 
                 if(!match){
@@ -623,5 +657,9 @@ angular.module('angular.generic.table').directive('genericTable', function() {
             }
         }
         return array.sort(dynamicSortMultiple(propertyArray));
+    }
+}).filter('escapeCsvString', function() {
+    return function(input){
+        return /^(\=|\@|\+,\-).*/g.test(input) ? '\''+input : input;
     }
 });
