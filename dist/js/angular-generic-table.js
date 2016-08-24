@@ -6,7 +6,7 @@
  * Description of generic-table module, lorem ipsum dolar sit amet
  */
 angular.module('angular.generic.table', ['ngAnimate','angular.filter','angular.bind.notifier','ngCsv']);
-!function(e){try{e=angular.module("angular.generic.table")}catch(t){e=angular.module("angular.generic.table",[])}e.run(["$templateCache",function(e){e.put("generic-table/directive/generic-table/generic-table.html",'<div class="generic-table"><div class="gt-wrapper"><table class="table table-sortable" ng-if="gtHasData" ng-class=":gtRefresh:gtClasses"><thead><tr ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><th ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class=":gtRefresh:[field.classNames, (field.objectKey | camelToDash) + \'-column\', \'sort-\'+(gtSettings | getProperty:field.objectKey:\'sort\')]"><span ng-click=":gtRefresh:(gtSettings | getProperty:field.objectKey:\'sort\') === \'enable\' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:\'sort\') === \'asc\' ? sort(field.objectKey):(gtSettings | getProperty:field.objectKey:\'sort\') === \'desc\' ? sort(field.objectKey):\'\'">{{::field.name}}</span></th></tr><tr ng-if=":gtRefresh:gtTotals" ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><td ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" class="total-column" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class="::[(gtFields | getProperty:field.objectKey:\'classNames\'), (field.objectKey | camelToDash) + \'-column\']" field-settings="::field" gt-render="" row-data="::gtTotals" gt-compile="::field.compile"></td></tr></thead><tbody><tr gt-row="" ng-repeat="row in :gtRefresh:gtDisplayData | limitTo: displayRows" gt-event="" ng-class=":gtRefresh:[gtRowTransition ? \'fade-in animate\':\'\',row.isOpen ? \'row-open\':\'\', $index % 2 == 0 ? \'row-odd\':\'row-even\']"><td ng-repeat="field in :gtRefresh:gtFields | orderBy:\'columnOrder\' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class="::[(gtFields | getProperty:field.objectKey:\'classNames\'), (field.objectKey | camelToDash) + \'-column\']"><span ng-class="::field.click ? \'gt-click-enabled\':\'\'" field-settings="::field" gt-render="" row-data="::row" gt-compile="::field.compile" ng-click=":gtRefresh:!field.click || field.click(row);!field.expand || toggleRow(field.expand,(gtSettings | filter:{\'visible\':true}:true).length,row,field.objectKey);"></span></td></tr></tbody><tr ng-if=":gtRefresh:pagination === false"><td class="gt-no-data" colspan="{{:gtRefresh:(gtSettings | filter:{\'visible\':true}:true).length}}">{{::gtNoDataTxt}}</td></tr></table></div><div class="gt-pagination text-center" ng-if=":gtRefresh:gtPagination === true && pagination !== false"><ul class="pagination"><li ng-class=":gtRefresh:{disabled: currentPage === 0}" ng-show="currentPage !== 0"><button class="btn-link link" ng-click="previousPage()" translate="ALL.GENERAL#PAGINATION_PREVIOUS#BUTTON" ng-disabled=":gtRefresh:currentPage === 0">&laquo; Prev</button></li><li ng-show=":gtRefresh:currentPage > 3"><button class="btn-link link" ng-click="setPage(0)">1</button><small>&hellip;</small></li><li style="display: inline;padding: 0 5px;" ng-repeat="page in :gtRefresh:pagination" ng-class=":gtRefresh:page === currentPage ? \'active\':\'\'"><button class="btn-link link" ng-click="setPage(page)">{{page+1}}</button></li><li ng-show=":gtRefresh:currentPage +1 < pages.length-1 && pages.length > 4"><small ng-show=":gtRefresh:currentPage + 3 < pages.length">&hellip;</small><button class="btn-link link" ng-click="setPage(pages.length-1)">{{pages.length}}</button></li><li ng-class=":gtRefresh:{disabled: currentPage == pages.length}" ng-show=":gtRefresh:currentPage+1 !== pages.length"><button class="btn-link link" ng-click="nextPage()" translate="ALL.GENERAL#PAGINATION_NEXT#BUTTON" ng-disabled=":gtRefresh:currentPage+1 === pages.length">Next &raquo;</button></li></ul></div></div>')}])}();
+!function(e){try{e=angular.module("angular.generic.table")}catch(t){e=angular.module("angular.generic.table",[])}e.run(["$templateCache",function(e){e.put("generic-table/directive/generic-table/generic-table.html",'<div class="generic-table"><div class="gt-wrapper"><table class="table table-sortable" ng-if="gtHasData" ng-class=":gtRefresh:gtClasses"><thead><tr ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><th ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class=":gtRefresh:[field.classNames, (field.objectKey | camelToDash) + \'-column\', \'sort-\'+(gtSettings | getProperty:field.objectKey:\'sort\')]"><span ng-click=":gtRefresh:(gtSettings | getProperty:field.objectKey:\'sort\') === \'enable\' ? sort($event,field.objectKey):(gtSettings | getProperty:field.objectKey:\'sort\') === \'asc\' ? sort($event,field.objectKey):(gtSettings | getProperty:field.objectKey:\'sort\') === \'desc\' ? sort($event,field.objectKey):\'\'">{{::field.name}}</span></th></tr><tr ng-if=":gtRefresh:gtTotals" ng-class="::gtRowTransition ? \'fade-in animate\':\'\'"><td ng-repeat="field in ::gtFields | orderBy:\'columnOrder\' track by field.objectKey" class="total-column" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class="::[(gtFields | getProperty:field.objectKey:\'classNames\'), (field.objectKey | camelToDash) + \'-column\']" field-settings="::field" gt-render="" row-data="::gtTotals" gt-compile="::field.compile"></td></tr></thead><tbody><tr gt-row="" ng-repeat="row in :gtRefresh:gtDisplayData | limitTo: displayRows" gt-event="" ng-class=":gtRefresh:[gtRowTransition ? \'fade-in animate\':\'\',row.isOpen ? \'row-open\':\'\', $index % 2 == 0 ? \'row-odd\':\'row-even\']"><td ng-repeat="field in :gtRefresh:gtFields | orderBy:\'columnOrder\' track by field.objectKey" ng-show=":gtRefresh:gtSettings | getProperty:field.objectKey:\'visible\'" ng-class="::[(gtFields | getProperty:field.objectKey:\'classNames\'), (field.objectKey | camelToDash) + \'-column\']"><span ng-class="::field.click ? \'gt-click-enabled\':\'\'" field-settings="::field" gt-render="" row-data="::row" gt-compile="::field.compile" ng-click=":gtRefresh:!field.click || field.click(row);!field.expand || toggleRow(field.expand,(gtSettings | filter:{\'visible\':true}:true).length,row,field.objectKey);"></span></td></tr></tbody><tr ng-if=":gtRefresh:pagination === false"><td class="gt-no-data" colspan="{{:gtRefresh:(gtSettings | filter:{\'visible\':true}:true).length}}">{{::gtNoDataTxt}}</td></tr></table></div><div class="gt-pagination text-center" ng-if=":gtRefresh:gtPagination === true && pagination !== false"><ul class="pagination"><li ng-class=":gtRefresh:{disabled: currentPage === 0}" ng-show="currentPage !== 0"><button class="btn-link link" ng-click="previousPage()" translate="ALL.GENERAL#PAGINATION_PREVIOUS#BUTTON" ng-disabled=":gtRefresh:currentPage === 0">&laquo; Prev</button></li><li ng-show=":gtRefresh:currentPage > 3"><button class="btn-link link" ng-click="setPage(0)">1</button><small>&hellip;</small></li><li style="display: inline;padding: 0 5px;" ng-repeat="page in :gtRefresh:pagination" ng-class=":gtRefresh:page === currentPage ? \'active\':\'\'"><button class="btn-link link" ng-click="setPage(page)">{{page+1}}</button></li><li ng-show=":gtRefresh:currentPage +1 < pages.length-1 && pages.length > 4"><small ng-show=":gtRefresh:currentPage + 3 < pages.length">&hellip;</small><button class="btn-link link" ng-click="setPage(pages.length-1)">{{pages.length}}</button></li><li ng-class=":gtRefresh:{disabled: currentPage == pages.length}" ng-show=":gtRefresh:currentPage+1 !== pages.length"><button class="btn-link link" ng-click="nextPage()" translate="ALL.GENERAL#PAGINATION_NEXT#BUTTON" ng-disabled=":gtRefresh:currentPage+1 === pages.length">Next &raquo;</button></li></ul></div></div>')}])}();
 /**
  * @ngdoc directive
  * @name angular.generic.table.directive:genericTable
@@ -146,7 +146,7 @@ angular.module('angular.generic.table').directive('genericTable', function() {
         },true).slice(0);
 
         // return rows where columns match entered search terms
-        filteredData = $filter('searchRow')(filtered,searchColumns, search);
+        filteredData = $filter('searchRow')(filtered,searchColumns, search, $scope.gtFields);
         applySort();
     };
 
@@ -341,7 +341,19 @@ angular.module('angular.generic.table').directive('genericTable', function() {
     };
 
     // sort function
-    $scope.sort = function(property){
+    $scope.sort = function($event,property){
+        var ctrlKey = $event.ctrlKey || $event.metaKey;
+
+        // reset sorting unless ctrl key or meta key (mac) is pressed while sorting
+        if(!ctrlKey && property) {
+            for (var i = 0; $scope.gtSettings.length > i; i++){
+                var setting = $scope.gtSettings[i];
+                if(setting.objectKey !== property && setting.sort === 'asc' || setting.objectKey !== property && setting.sort === 'desc'){
+                    $scope.gtSettings[i].sort = 'enable';
+
+                }
+            }
+        }
         if (property){
             for (var i = 0; $scope.gtSettings.length > i; i++){
                 var setting = $scope.gtSettings[i];
@@ -369,7 +381,7 @@ angular.module('angular.generic.table').directive('genericTable', function() {
         sorting = $filter('map')($filter('filter')($scope.gtSettings,{sort:"asc desc"},function(expected, actual){
             return actual.indexOf(expected) > -1;
         }),function(sort){
-            return (sort.sort === 'desc' ? '-':'') + sort.objectKey
+            return (sort.sort === 'desc' ? '-':'') + sort.objectKey;
         });
 
         applySort();
@@ -400,7 +412,10 @@ angular.module('angular.generic.table').directive('genericTable', function() {
                     // if export method is declared and is a function...
                     if (exportMethod && angular.isFunction(exportMethod)) {
                         // ...replace export data row value with value returned by function
-                        row[key] = exportMethod(row, key);
+                        var exportValue = exportMethod(row, key);
+                        row[key] = fieldSetting.exportEscapeString === false ? exportValue : $filter('escapeCsvString')(exportValue);
+                    } else {
+                        row[key] = fieldSetting.exportEscapeString === false ? row[key] : $filter('escapeCsvString')(row[key]);
                     }
 
                     // if exportColumns are passed with options...
@@ -424,7 +439,7 @@ angular.module('angular.generic.table').directive('genericTable', function() {
 
         // if exportColumns are passed with options...
         if (typeof options.exportColumns !== 'undefined') {
-            
+
             // ...get field settings for all objectKeys in exportColumns array
             var exportFields = $filter('map')(options.exportColumns, function(objectKey){
                 return $filter('filter')($scope.gtFields.slice(0), {objectKey:objectKey}, true)[0];
@@ -442,7 +457,8 @@ angular.module('angular.generic.table').directive('genericTable', function() {
             columnOrder:$filter('map')(exportFields,"objectKey"), // get column order
             decimalSep:typeof options.decimalSep === 'undefined' ? ',':options.decimalSep,
             addByteOrderMarker:typeof options.addBom === 'undefined',
-            charset:typeof options.charset === 'undefined' ? 'utf-8':options.charset
+            charset:typeof options.charset === 'undefined' ? 'utf-8':options.charset,
+            quoteStrings: typeof options.quoteStrings === 'undefined' ? false : options.quoteStrings
         };
 
         CSV.stringify(data, headers).then(function(result){
@@ -544,11 +560,14 @@ angular.module('angular.generic.table').directive('genericTable', function() {
             } else {
                 output = row[key];
             }
-            if(scope.compile === true){
-                output = $compile(output)(scope.$parent); // use same scope as row
+            if(scope.compile && scope.compile !== false){
+                // declare element scope
+                var elementScope = scope.compile !== true && scope.compile.$watch ? scope.compile:scope.$parent; // use same scope as row unless a valid scope is passed
+                output = $compile(output)(elementScope); // compile
+                element.append(output); // add html
+            } else {
+                element[0].innerHTML = output; // add html
             }
-
-            element[0].innerHTML = output; // add html
         }
     };
 }).filter('getProperty',function($filter){
@@ -561,23 +580,39 @@ angular.module('angular.generic.table').directive('genericTable', function() {
         }
         return output;
     }
-}).filter('searchRow',function($filter){
-    return function(array,fields,searchTerms){
+}).filter('searchRow',function($filter,$interpolate){
+    return function(array,fields,searchTerms,fieldsSettings){
+        //console.log(array,fields,fieldsSettings);
+        var search = {};
+        for(var k = 0; k < fieldsSettings.length;k++){
+            //console.log(array[k]);
+            var fieldSetting = fieldsSettings[k];
+            if(fieldSetting.search && angular.isFunction(fieldSetting.search)){
+                var objectKey = fieldSetting.objectKey;
+                search[objectKey] = fieldSetting.search;
+            }
+        }
 
+        if(!searchTerms || searchTerms.replace(/"/g,"").length === 0){
+            return array;
+        }
         var filteredArray = [];
-        var searchTerms = typeof searchTerms === 'undefined' ? '':searchTerms;
-        var searchTermsArray = searchTerms.toLowerCase().split(' ');
+        searchTerms = typeof searchTerms === 'undefined' ? '':searchTerms;
+        var searchTermsArray = searchTerms.toLowerCase().match(/"[^"]+"|[\w]+/g);
 
         for (var i = 0; i < array.length; i++){
             var row = array[i];
             var string = '';
+            var j = 0;
             $filter('map')(fields,function(field){
-                string += row[field];
+                var separator = j === 0 ? '':' & ';
+                string += search[field] ? separator+search[field](row,field):separator+row[field];
+                j++;
             });
             string = string.toLowerCase();
             var match = true;
             for (var k = 0; k < searchTermsArray.length;k++){
-                var term = searchTermsArray[k];
+                var term = searchTermsArray[k].replace(/"/g,'');
                 match = string.indexOf(term) !== -1;
 
                 if(!match){
@@ -631,5 +666,9 @@ angular.module('angular.generic.table').directive('genericTable', function() {
             }
         }
         return array.sort(dynamicSortMultiple(propertyArray));
+    }
+}).filter('escapeCsvString', function() {
+    return function(input){
+        return /^(\=|\@|\+,\-).*/g.test(input) ? '\''+input : input;
     }
 });

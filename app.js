@@ -7,7 +7,7 @@
  * # generic-table-dev (core module)
  * The generic-table module is loaded by default.
  */
-angular.module('generic.table.dev', ['mgcrea.ngStrap','ui.router','ngAnimate','ngResource','angular.filter','angular.bind.notifier','ngSanitize', 'ngCsv','angular.generic.table']);
+angular.module('generic.table.dev', ['ui.router','ngAnimate','ngResource','angular.filter','angular.bind.notifier','ngSanitize', 'ngCsv','angular.generic.table']);
 
 angular.module('generic.table.dev').config(function($stateProvider, $urlRouterProvider) {
 

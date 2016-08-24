@@ -14,6 +14,13 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
         console.log(string);
         $scope.$broadcast('gt-search-table:'+$scope.basicTableId,string);
     };
+
+    $scope.removeCity = function(){
+        $scope.selectedRows.row1 = false;
+    };
+    $scope.selectedRows = {
+        row1:true
+    };
     // Basic table with static data
     $scope.basicTable = {
         settings: [
@@ -45,6 +52,20 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
                 sort:'enable',
                 sortOrder:0,
                 columnOrder:5
+            },{
+                objectKey:'checkbox',
+                visible:true,
+                enabled:true,
+                sort:'enable',
+                sortOrder:0,
+                columnOrder:20
+            },{
+                objectKey:'id',
+                visible:true,
+                enabled:true,
+                sort:'enable',
+                sortOrder:0,
+                columnOrder:-1
             }
 
         ],
@@ -61,10 +82,13 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
             },
             {
                 name:'City',
-                type:"STRING",
                 objectKey:'city',
                 classNames:"",
                 click:function(row){showSomething(row.numberOfCats);}
+            },{
+                name:'Id',
+                objectKey:'id',
+                classNames:""
             },{
                 name:'Number of cats',
                 type:"NUMBER",
@@ -72,43 +96,63 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
                 classNames:"text-right"
             },{
                 name:'% Happy cats',
-                type:"NUMBER",
                 objectKey:'percentHappyCats',
                 classNames:"text-right",
                 render:function(row){ return '<span>'+row.numberOfCats/(row.numberOfCats*1.2)+'%</span>';},
-                value:function(row){ return row.numberOfCats/(row.numberOfCats*1.2);}
+                value:function(row){ return row.numberOfCats/(row.numberOfCats*1.2);},
+                search:function(row, column){ return row.numberOfCats }
+            },{
+                name:'',
+                objectKey:'checkbox',
+                classNames:"text-center",
+                render:function(row){
+                    var modelName = 'row'+row.id;
+                    return '<input type="checkbox" ng-model="selectedRows.'+modelName+'" >';
+
+                },
+                compile:$scope
             }
         ],
         data:[{
             "city": "Juliaca",
-            "numberOfCats": 149639
+            "numberOfCats": 149639,
+            "id":1
         }, {
             "city": "Watergrasshill",
-            "numberOfCats": 436290
+            "numberOfCats": 436290,
+            "id":2
         }, {
             "city": "Dondar Quşçu",
-            "numberOfCats": 725965
+            "numberOfCats": 725965,
+            "id":3
         }, {
             "city": "Florida",
-            "numberOfCats": 258855
+            "numberOfCats": 258855,
+            "id":4
         }, {
             "city": "Sosnovyy Bor",
-            "numberOfCats": 486188
+            "numberOfCats": 486188,
+            "id":5
         }, {
             "city": "Bogdanovich",
-            "numberOfCats": 691411
+            "numberOfCats": 691411,
+            "id":6
         }, {
             "city": "Zaragoza",
-            "numberOfCats": 304539
+            "numberOfCats": 304539,
+            "id":7
         }, {
             "city": "Karlstad",
-            "numberOfCats": 364097
+            "numberOfCats": 364097,
+            "id":8
         }, {
             "city": "Tanjay",
-            "numberOfCats": 970819
+            "numberOfCats": 970819,
+            "id":9
         }, {
             "city": "Troparëvo",
-            "numberOfCats": 768663
+            "numberOfCats": 768663,
+            "id":10
         }]
     };
 

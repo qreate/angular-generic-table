@@ -2,6 +2,16 @@ Release History
 ---------------
 
 ## [Unreleased]
+# [1.3.3] - 2016-08-19
+### Fixed
+- Compile error
+- Sorting will now be reset unless ctrl-key or meta-key (mac) is pressed while sorting
+
+### Added
+- Excel export will by default escape unsafe methods, use new setting `exportEscapeString` to override
+- Support for passing scope to compile function, can be used for two way binding of table data
+- Support for custom search function, this function is used to set column value when searching the table
+
 # [1.3.2] - 2016-08-05
 ### Fixed
 - Minor markup error

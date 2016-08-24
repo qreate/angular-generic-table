@@ -467,7 +467,9 @@ angular.module('generic.table.dev').controller('DocumentationController',functio
                 name:'Name',
                 type:"STRING",
                 objectKey:'fullName',
-                classNames:""
+                classNames:"",
+                exportEscapeString:false
+
             },{
                 name:'Age',
                 type:"NUMBER",

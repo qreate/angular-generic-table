@@ -1,5 +1,7 @@
 <div class="col-md-12" ng-controller="DevController">
     <button class="btn btn-default" ng-click="exportCsv()">Export</button>
     <input ng-model="searchField" ng-change="searchTable(searchField)"/>
+    {{selectedRows}}{{hej1}}
+    <button class="btn btn-default" ng-click="removeCity()">Remove first city</button>
     <generic-table gt-classes="table-bordered table-condensed table-hover" gt-id="basicTableId" gt-data="basicTable.data" gt-settings="basicTable.settings" gt-fields="basicTable.fields" gt-totals="basicTable.totals" gt-rows="6"></generic-table>
 </div>
