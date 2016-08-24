@@ -72,6 +72,7 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
         fields:[
             {
                 name:'Number of cats',
+                stackedHeading:'No. of cats',
                 objectKey:'expandRow',
                 className:'expand',
                 expand:'<custom-dir></custom-dir>',
@@ -82,20 +83,24 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
             },
             {
                 name:'City',
+                stackedHeading:true,
                 objectKey:'city',
                 classNames:"",
                 click:function(row){showSomething(row.numberOfCats);}
             },{
                 name:'Id',
+                stackedHeading:true,
                 objectKey:'id',
                 classNames:""
             },{
                 name:'Number of cats',
+                stackedHeading:'No. of cats',
                 type:"NUMBER",
                 objectKey:'numberOfCats',
                 classNames:"text-right"
             },{
                 name:'% Happy cats',
+                stackedHeading:true,
                 objectKey:'percentHappyCats',
                 classNames:"text-right",
                 render:function(row){ return '<span>'+row.numberOfCats/(row.numberOfCats*1.2)+'%</span>';},
@@ -103,6 +108,7 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
                 search:function(row, column){ return row.numberOfCats }
             },{
                 name:'',
+                stackedHeading:'Checkbox',
                 objectKey:'checkbox',
                 classNames:"text-center",
                 render:function(row){

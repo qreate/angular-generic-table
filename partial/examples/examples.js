@@ -452,6 +452,7 @@ angular.module('generic.table.dev').controller('DocumentationController',functio
         fields:[
             {
                 name:"Favorite color",
+                stackedHeading:'Custom heading for stacked',
                 type:"STRING",
                 objectKey:'favoriteColor',
                 classNames:"text-right middle",
@@ -459,12 +460,14 @@ angular.module('generic.table.dev').controller('DocumentationController',functio
                 search:false
             },{
                 name:"Birthday",
+                stackedHeading:true,
                 type:"DATE",
                 objectKey:'birthday',
                 classNames:"",
                 render: function(row){return moment.unix(row.birthday).format('YYYY-MM-DD')}
             },{
                 name:'Name',
+                stackedHeading:true,
                 type:"STRING",
                 objectKey:'fullName',
                 classNames:"",
@@ -472,6 +475,7 @@ angular.module('generic.table.dev').controller('DocumentationController',functio
 
             },{
                 name:'Age',
+                stackedHeading:true,
                 type:"NUMBER",
                 objectKey:'age',
                 classNames:"text-right",
@@ -479,9 +483,10 @@ angular.module('generic.table.dev').controller('DocumentationController',functio
                 value: function(row){return moment().diff(moment.unix(row.birthday),'years')}
             },{
                 name:'Details',
+                stackedHeading:false,
                 type:"NUMBER",
                 objectKey:'details',
-                classNames:"text-right",
+                classNames:"text-right hidden-stacked",
                 render: function(row, column){ return '<a>{{row.isOpen ? "Hide":"Show"}}<a/>'},
                 compile:true,
                 value: function(row){return 'details'},
