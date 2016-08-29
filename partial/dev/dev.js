@@ -40,7 +40,7 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
                 columnOrder:20
             },{
                 objectKey:'numberOfCats',
-                visible:false,
+                visible:true,
                 enabled:true,
                 sort:'enable',
                 sortOrder:0,
@@ -97,7 +97,8 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
                 stackedHeading:'No. of cats',
                 type:"NUMBER",
                 objectKey:'numberOfCats',
-                classNames:"text-right"
+                classNames:"text-right",
+                sort:function (row,column) { return row.numberOfCats.toString()}
             },{
                 name:'% Happy cats',
                 stackedHeading:true,

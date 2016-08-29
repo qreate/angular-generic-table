@@ -21,17 +21,19 @@ angular.module('angular.generic.table').directive('genericTable', function() {
         restrict: 'E',
         replace: true,
         scope: {
-            gtId:'=gtId',
+            gtId:'=?gtId',
             gtClasses:'@gtClasses',
             gtSettings:'=gtSettings',
             gtFields:'=gtFields',
-            gtTotals:'=gtTotals',
+            gtTotals:'=?gtTotals',
             //gtIndex:'=gtIndex',
-            gtData:'=gtData',
+            gtData:'=?gtData',
             gtRows:'@gtRows',
             gtRowTransition:'@gtRowTransition',
             gtPagination:'@gtPagination',
-            gtNoDataTxt:'@'
+            //gtNoDataTxt:'@',
+            gtExpand:'=?',
+            gtTranslations:'=?'
         },
         templateUrl: 'generic-table/directive/generic-table/generic-table.html',
         link: function(scope, element, attrs, fn) {
@@ -55,8 +57,50 @@ angular.module('angular.generic.table').directive('genericTable', function() {
     }); // returns array containing sorting criteria
     $scope.gtPagination = typeof $scope.gtPagination === 'undefined' ? true:$scope.gtPagination !== 'false';
     $scope.gtRows = typeof $scope.gtRows === 'undefined' ? 20:$scope.gtRows;
-    $scope.gtNoDataTxt = typeof $scope.gtNoDataTxt === 'undefined' ? 'No table data to display':$scope.gtNoDataTxt;
+
+    // text translations
+    $scope.gtTranslations = typeof $scope.gtTranslations === 'undefined' ? {}:$scope.gtTranslations;
+    $scope.gtTranslations.noData = typeof $scope.gtTranslations.noData === 'undefined' ? 'No table data to display':$scope.gtTranslations.noData;
+    $scope.gtTranslations.previous = typeof $scope.gtTranslations.previous === 'undefined' ? '&laquo; Prev':$scope.gtTranslations.previous;
+    $scope.gtTranslations.next = typeof $scope.gtTranslations.next === 'undefined' ? 'Next &raquo;':$scope.gtTranslations.next;
+
     $scope.gtId = typeof $scope.gtId === 'undefined' ? $scope.$id:$scope.gtId;
+
+    $scope.gtExpand = typeof $scope.gtExpand === 'undefined' ? {}:$scope.gtExpand;
+    $scope.gtExpand.directive = typeof $scope.gtExpand.directive === 'undefined' ? '':$scope.gtExpand.directive;
+    $scope.gtExpand.multiple = typeof $scope.gtExpand.multiple === 'undefined' ? false:$scope.gtExpand.multiple;
+    $scope.gtExpand.rows = typeof $scope.gtExpand.rows === 'undefined' ? []:$scope.gtExpand.rows;
+    $scope.bindings = [];
+
+    console.log($scope.gtExpand);
+
+    // sync row state i.e. if row should be opened or closed
+    $scope.syncRows = function (open, force) {
+        if(open && $scope.gtDisplayData){
+            for(var i = 0;i < $scope.gtDisplayData.length; i++){
+                if($scope.gtExpand.rows.indexOf(i) === -1){
+                    $scope.$broadcast('$gt-open-row:'+i, force);
+                }
+            }
+            $scope.$broadcast('$$rebind::gtRefresh');
+        } else if ($scope.gtDisplayData) {
+            for(var i = 0;i < $scope.gtRows; i++){
+                if($scope.gtExpand.rows.indexOf(i) !== -1){
+                    $scope.$broadcast('$gt-close-row:'+i);
+                }
+            }
+            $scope.$broadcast('$$rebind::gtRefresh');
+        }
+        // if we have active bindings that we need to remove...
+        if($scope.bindings.length > 0){
+            for (var i = 0; i < $scope.bindings.length;i++){
+                // ...remove scope and active watches
+                $scope.bindings[i].$destroy();
+            }
+        }
+
+    };
+
 
     // extend field definitions
     var extendFieldDefinitions = function() {
@@ -185,6 +229,14 @@ angular.module('angular.generic.table').directive('genericTable', function() {
         applyFilter(mappedData.slice(0),searchTerms);
     });
 
+    $scope.$on('gt-open-all-rows:'+$scope.gtId,function(event,arg){
+        $scope.syncRows(true, true);
+    });
+
+    $scope.$on('gt-close-all-rows:'+$scope.gtId,function(event,arg){
+        $scope.syncRows(false); // close open rows
+    });
+
     // listen for update table events
     $scope.$on('gt-update-structure:'+$scope.gtId,function(event,arg){
         $scope.gtFields = arg.fields;
@@ -234,6 +286,8 @@ angular.module('angular.generic.table').directive('genericTable', function() {
 
     // create pagination
     var pagination = function(totalPages, currentPage){
+        $scope.syncRows(false); // close open rows
+
         $scope.pagination = [];
 
         // if total pages equals 0 ie. no data available
@@ -504,22 +558,51 @@ angular.module('angular.generic.table').directive('genericTable', function() {
 
     };
 
-}).directive('gtRow', function($compile) {
+}).directive('gtRow', function($compile, $filter) {
     return {
         restrict: 'A',
         scope:false,
         link: function(scope, element, attrs, fn) {
-            scope.toggleRow = function(content,columns,row,key){
-                if(!scope.row.isOpen){
-                    var row = $compile('<tr class="expanded-row"><td colspan="'+columns+'">'+content+'</td></tr>')(scope);
-                    element.after(row);
-                    scope.row.isOpen = true;
+            var columns = $filter('filter')(scope.gtSettings,{'visible':true},true).length;
+            var addRow = function(openAll){
+                !scope.gtExpand.multiple && !openAll ? scope.syncRows(false):'';
+                var newScope = scope.$new(); // create new scope for row
+                var row = $compile('<tr class="expanded-row"><td colspan="'+columns+'">'+scope.gtExpand.directive+'</td></tr>')(newScope);
+                element.after(row); // add element to view
+                scope.row.isOpen = true;
+                scope.gtExpand.rows.push(index);
+            };
+            var removeRow = function(){
+                //scope.$$watchers = null; // remove watches
+                element.next().scope().$destroy(); // destroy scope and remove watchers
+                element.next().remove(); // remove element from view
+                scope.row.isOpen = false;
+                scope.gtExpand.rows.splice(scope.gtExpand.rows.indexOf(index),1);
+            };
+
+            var index = scope.$index;
+            scope.toggleRow = function(){
+                var expanded = scope.gtExpand.rows.indexOf(index) !== -1;
+                if(!expanded){
+                    addRow();
+
                 } else {
-                    element.next().remove();
-                    scope.row.isOpen = false;
+                    removeRow();
                 }
                 scope.$broadcast('$$rebind::gtRefresh'); // update bindings
             };
+            scope.$on('$gt-open-row:'+index,function (event,force) {
+                var expanded = scope.gtExpand.rows.indexOf(index) !== -1;
+                if(!expanded){
+                    addRow(force);
+                }
+            });
+            scope.$on('$gt-close-row:'+index,function () {
+                var expanded = scope.gtExpand.rows.indexOf(index) !== -1;
+                if(expanded){
+                    removeRow();
+                }
+            });
         }
     };
 }).directive('gtEvent', function() {
@@ -538,7 +621,8 @@ angular.module('angular.generic.table').directive('genericTable', function() {
         scope:{
             row:'=rowData',
             settings:'=fieldSettings',
-            compile:'=gtCompile'
+            compile:'=gtCompile',
+            activeBindings: '=activeBindings'
         },
         link: function(scope, element, attrs, fn) {
             var row = scope.row;
@@ -553,7 +637,13 @@ angular.module('angular.generic.table').directive('genericTable', function() {
             }
             if(scope.compile && scope.compile !== false){
                 // declare element scope
-                var elementScope = scope.compile !== true && scope.compile.$watch ? scope.compile:scope.$parent; // use same scope as row unless a valid scope is passed
+                var elementScope;
+                if(scope.compile !== true && scope.compile.$watch){
+                    elementScope = scope.compile.$new(); // create new scope for rendered value
+                    scope.activeBindings.push(elementScope); // add scope to active bindings which we use to clear/remove obsolete scopes/watches
+                } else {
+                    elementScope = scope.$parent.$new(); // create new scope for rendered value
+                }
                 output = $compile(output)(elementScope); // compile
                 element.append(output); // add html
             } else {
@@ -626,6 +716,7 @@ angular.module('angular.generic.table').directive('genericTable', function() {
     }
 }).filter('gtSort',function(){
     return function(array, propertyArray){
+        console.log(array);
         function dynamicSort(property) {
             var sortOrder = 1;
             if(property[0] === "-") {

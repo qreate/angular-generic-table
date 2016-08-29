@@ -73,6 +73,7 @@
         <h3 id="exportOptions">Export to CSV options</h3>
         <p class="text-justify">Pass optional arguments to override the default settings when exporting data to csv.</p>
         <generic-table gt-data="exportOptionsTable.data" gt-settings="exportOptionsTable.settings" gt-fields="exportOptionsTable.fields" gt-pagination=false></generic-table>
+        <br>
         <h3>Responsive layout</h3>
         <p class="text-justify">Add <code>table-stacked</code> class to gt-classes (like you do for other bootstrap classes) to get stacked columns on small screens i.e. mobile devices.</p>
         <p class="text-justify">By default the css uses bootstrap's screen-xs-max value of 768 px but you could as easily write your own media query and use another value. If you want headings for each column, add <code>stackedHeading</code> key to your field settings object. Use <code>true</code> if you want to reuse the same label/name you've already declared or enter a custom string if you want something else. See advance example implementation below. </p>
@@ -179,8 +180,18 @@
         <p class="text-justify">Use custom export function on field definition to alter the exported value, remove field from export using settings.
         </p>
         <strong>Expanding rows</strong>
-        <p class="text-justify">Expand rows and show custom content, why not pass your own directive?
-            Access parent scope and row values by setting directive scope to false or if you prefer, pass row object to an isolated scope like this in the expand property of the field definition: <code>expand: &lt;my-custom-directive data-row=”row”&gt;</code>
+        <p class="text-justify">Expand rows and show custom content when column field is clicked by setting expand to true, <code>expand: true</code>.
+            In order for this to work you must also define the content of the expanded row. Use the gt-expand attribute on the directive to pass configuration to the table like this:
+            <code>
+                <br>
+                <br>
+                $scope.expandConfig = {<br>
+                    directive:'&lt;my-custom-directive&gt;&lt;/my-custom-directive&gt;', // name of our directive<br>
+                    multiple:false // should we allow mulltiple rows to be expanded/open<br>
+                }<br>
+                <br>
+            </code>
+            Access parent scope and row values by setting directive scope to false or if you prefer, pass row object to an isolated scope like this in the expand configuration <code>directive: &lt;my-custom-directive&gt; data-row=”row”&gt;'&lt;/my-custom-directive&gt;'</code>
         </p>
         <strong>Responsive layout</strong>
         <p class="text-justify">Stack column on small screens for better readability and use custom labels/headings if you want to. Try resizing browser to see the result of stacking columns.
@@ -196,14 +207,16 @@
             <h4>Markup</h4>
         <pre>
             <code class="line-numbers language-markup" prism>
-                <form class="form-inline">
-                    <div class="form-group"><input class="form-control" role="search" placeholder="Search table" ng-model="searchField" ng-change="searchTable(searchField)"/></div>
-                    <div class="form-group"><button class="btn btn-default btn-block" ng-click="applyFilters()">Apply predefined filters</button></div>
-                    <div class="form-group"><button class="btn btn-default btn-block" ng-click="resetFilters()">Reset filters</button></div>
-                    <div class="form-group" ng-show="tableInfo.filtered!==tableInfo.total"><span class="form-control-static">&nbsp;Showing {{tableInfo.showingFrom}} to {{tableInfo.showingTo}} of {{tableInfo.filtered}} entries (filtered from a total of {{tableInfo.total}} entries).</span>&nbsp</div>
-                    <div class="form-group"><button class="btn btn-default btn-block" ng-click="exportCsv()">Export to CSV</button></div>
-                </form>
-                <generic-table gt-classes="table-stacked" gt-settings="tableCustomRender.settings" gt-fields="tableCustomRender.fields" gt-totals="tableCustomRender.totals" gt-rows="25" gt-id="tableCustomRender.id"></generic-table>
+                &lt;form class=&quot;form-inline&quot;&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;&lt;input class=&quot;form-control&quot; role=&quot;search&quot; placeholder=&quot;Search table&quot; ng-model=&quot;searchField&quot; ng-change=&quot;searchTable(searchField)&quot;/&gt;&lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;&lt;button class=&quot;btn btn-default btn-block&quot; ng-click=&quot;applyFilters()&quot;&gt;Apply predefined filters&lt;/button&gt;&lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;&lt;button class=&quot;btn btn-default btn-block&quot; ng-click=&quot;resetFilters()&quot;&gt;Reset filters&lt;/button&gt;&lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot; ng-show=&quot;tableInfo.filtered!==tableInfo.total&quot;&gt;&lt;span class=&quot;form-control-static&quot;&gt;&amp;nbsp;Showing {{tableInfo.showingFrom}} to {{tableInfo.showingTo}} of {{tableInfo.filtered}} entries (filtered from a total of {{tableInfo.total}} entries).&lt;/span&gt;&amp;nbsp&lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;&lt;button class=&quot;btn btn-default btn-block&quot; ng-click=&quot;exportCsv()&quot;&gt;Export to CSV&lt;/button&gt;&lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;&lt;button class=&quot;btn btn-default btn-block&quot; ng-click=&quot;closeAllRows()&quot;&gt;Close all rows&lt;/button&gt;&lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;&lt;button class=&quot;btn btn-default btn-block&quot; ng-click=&quot;openAllRows()&quot;&gt;Open all rows&lt;/button&gt;&lt;/div&gt;
+                &lt;/form&gt;
+                &lt;generic-table gt-classes=&quot;table-stacked&quot; gt-settings=&quot;tableCustomRender.settings&quot; gt-fields=&quot;tableCustomRender.fields&quot; gt-totals=&quot;tableCustomRender.totals&quot; gt-rows=&quot;25&quot; gt-id=&quot;tableCustomRender.id&quot; gt-expand=&quot;expandConfig&quot;&gt;&lt;/generic-table&gt;
             </code>
         </pre>
             <h4>Javascript</h4>
@@ -239,6 +252,23 @@
                     $scope.resetFilters = function() {
                         var filters = {};
                         $scope.$broadcast('gt-filter-table:'+$scope.tableCustomRender.id,filters);
+                    };
+
+
+                    // function for closing open columns
+                    $scope.closeAllRows = function() {
+                        $scope.$broadcast('gt-close-all-rows:'+$scope.tableCustomRender.id);
+                    };
+
+                    // function for closing open columns
+                    $scope.openAllRows = function() {
+                        $scope.$broadcast('gt-open-all-rows:'+$scope.tableCustomRender.id);
+                    };
+
+                    // row expand configuration
+                    $scope.expandConfig = {
+                        directive:'&lt;custom-dir&gt;&lt;/custom-dir&gt;',
+                        multiple:false
                     };
 
                     // Table with custom render function
@@ -322,7 +352,7 @@
                                 render: function(row, column){ return '&lt;a&gt;{{row.isOpen ? "Hide":"Show"}}&lt;/a&gt;'},
                                 compile:true,
                                 value: function(row){return 'details'},
-                                expand:'&lt;custom-dir&gt;&lt;/custom-dir&gt;',
+                                expand:true,
                                 search:false
                             }
                         ],
@@ -383,7 +413,10 @@
             <div class="form-group"><button class="btn btn-default btn-block" ng-click="resetFilters()">Reset filters</button></div>
             <div class="form-group" ng-show="tableInfo.filtered!==tableInfo.total"><span class="form-control-static">&nbsp;Showing {{tableInfo.showingFrom}} to {{tableInfo.showingTo}} of {{tableInfo.filtered}} entries (filtered from a total of {{tableInfo.total}} entries).</span>&nbsp</div>
             <div class="form-group"><button class="btn btn-default btn-block" ng-click="exportCsv()">Export to CSV</button></div>
+            <div class="form-group"><button class="btn btn-default btn-block" ng-click="closeAllRows()">Close all rows</button></div>
+            <div class="form-group"><button class="btn btn-default btn-block" ng-click="openAllRows()">Open all rows</button></div>
+
         </form>
-        <generic-table gt-classes="table-stacked" gt-settings="tableCustomRender.settings" gt-fields="tableCustomRender.fields" gt-totals="tableCustomRender.totals" gt-rows="25" gt-id="tableCustomRender.id"></generic-table>
+        <generic-table gt-classes="table-stacked" gt-settings="tableCustomRender.settings" gt-fields="tableCustomRender.fields" gt-totals="tableCustomRender.totals" gt-rows="25" gt-id="tableCustomRender.id" gt-expand="expandConfig"></generic-table>
     </div>
 </div>
