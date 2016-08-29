@@ -724,7 +724,9 @@ angular.module('angular.generic.table').directive('genericTable', function() {
                 property = property.substr(1);
             }
             return function (a,b) {
-                var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+                var value1 = a[property] === null ? '':a[property];
+                var value2 = b[property] === null ? '':b[property];
+                var result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
                 return result * sortOrder;
             }
         }
