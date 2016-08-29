@@ -36,6 +36,7 @@
                     export: function(row,column){ return parseFloat(row[column]);} // custom function for export presentation (OPTIONAL),
                     exportEscapeString: true, // should field be escaped when exported, true by default (OPTIONAL),
                     search: function(row, column){ return row[column]; } // custom function for searching field, if field shouldn't be searchable change function to false, true (search using data value) by default (OPTIONAL)
+                    sort: function(row, column){ return parseFloat(row[column]); } // custom function for sorting, ex. if field contains string but should be sorted as value (OPTIONAL)
                 }]
             </code>
         </pre>

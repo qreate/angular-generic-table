@@ -187,7 +187,7 @@ angular.module('angular.generic.table').directive('genericTable', function() {
 
     // sort, this is where we sort the filtered results
     var applySort = function (){
-        sortedData = sorting !== false ? $filter('gtSort')(filteredData, sorting): filteredData;
+        sortedData = sorting !== false ? $filter('gtSort')(filteredData, sorting,$scope.gtFields): filteredData;
         applyPagination();
     };
 
@@ -715,8 +715,21 @@ angular.module('angular.generic.table').directive('genericTable', function() {
         return string.replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase()} catch(error){console.log('nothing to replace:', error)};
     }
 }).filter('gtSort',function(){
-    return function(array, propertyArray){
-        console.log(array);
+    return function(array, propertyArray,fields){
+        var customSort = {}; // store custom sort function
+
+        // loop through fields...
+        for(var i = 0;i < fields.length; i++){
+            var field = fields[i];
+
+            // ...and if field has custom sort function...
+            if(field.sort && angular.isFunction(field.sort)){
+
+                // ...store custom sort function in custom sort object
+                customSort[field.objectKey] = field.sort;
+            }
+        }
+
         function dynamicSort(property) {
             var sortOrder = 1;
             if(property[0] === "-") {
@@ -724,8 +737,8 @@ angular.module('angular.generic.table').directive('genericTable', function() {
                 property = property.substr(1);
             }
             return function (a,b) {
-                var value1 = a[property] === null ? '':a[property];
-                var value2 = b[property] === null ? '':b[property];
+                var value1 = a[property] === null ? '':customSort[property] ? customSort[property](a,property):a[property]; // set value to empty string if null and use custom sort function if one is provided
+                var value2 = b[property] === null ? '':customSort[property] ? customSort[property](b,property):b[property]; // set value to empty string if null and use custom sort function if one is provided
                 var result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
                 return result * sortOrder;
             }
