@@ -72,8 +72,6 @@ angular.module('angular.generic.table').directive('genericTable', function() {
     $scope.gtExpand.rows = typeof $scope.gtExpand.rows === 'undefined' ? []:$scope.gtExpand.rows;
     $scope.bindings = [];
 
-    console.log($scope.gtExpand);
-
     // sync row state i.e. if row should be opened or closed
     $scope.syncRows = function (open, force) {
         if(open && $scope.gtDisplayData){
@@ -91,14 +89,23 @@ angular.module('angular.generic.table').directive('genericTable', function() {
             }
             $scope.$broadcast('$$rebind::gtRefresh');
         }
+    };
+
+    // remove bindings and old watchers
+    $scope.removeBinding = function(){
+        //console.log($scope.gtDisplayData,$scope.bindings);
+        var activeItems = $filter('map')($scope.gtDisplayData,'$$hashKey');
         // if we have active bindings that we need to remove...
         if($scope.bindings.length > 0){
             for (var i = 0; i < $scope.bindings.length;i++){
-                // ...remove scope and active watches
-                $scope.bindings[i].$destroy();
+
+                // check if item is part of active view...
+                if(activeItems && activeItems.indexOf($scope.bindings[i].$$hashKey) === -1){
+                    // ...remove scope and active watchers if not
+                    $scope.bindings[i].scope.$destroy();
+                }
             }
         }
-
     };
 
 
@@ -287,6 +294,7 @@ angular.module('angular.generic.table').directive('genericTable', function() {
     // create pagination
     var pagination = function(totalPages, currentPage){
         $scope.syncRows(false); // close open rows
+        $scope.removeBinding(); // remove old bindings
 
         $scope.pagination = [];
 
@@ -574,10 +582,10 @@ angular.module('angular.generic.table').directive('genericTable', function() {
             };
             var removeRow = function(){
                 //scope.$$watchers = null; // remove watches
-                element.next().scope().$destroy(); // destroy scope and remove watchers
-                element.next().remove(); // remove element from view
                 scope.row.isOpen = false;
                 scope.gtExpand.rows.splice(scope.gtExpand.rows.indexOf(index),1);
+                element.next().scope().$destroy(); // destroy scope and remove watchers
+                element.next().remove(); // remove element from view
             };
 
             var index = scope.$index;
@@ -640,7 +648,8 @@ angular.module('angular.generic.table').directive('genericTable', function() {
                 var elementScope;
                 if(scope.compile !== true && scope.compile.$watch){
                     elementScope = scope.compile.$new(); // create new scope for rendered value
-                    scope.activeBindings.push(elementScope); // add scope to active bindings which we use to clear/remove obsolete scopes/watches
+                    //console.log(scope.row.$$hashKey);
+                    scope.activeBindings.push({$$hashKey:scope.row.$$hashKey,scope:elementScope}); // add scope to active bindings which we use to clear/remove obsolete scopes/watches
                 } else {
                     elementScope = scope.$parent.$new(); // create new scope for rendered value
                 }

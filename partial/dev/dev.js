@@ -21,6 +21,13 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
     $scope.selectedRows = {
         row1:true
     };
+
+    // row expand configuration
+    $scope.expandConfig = {
+        directive:'<custom-dir></custom-dir>',
+        multiple:false
+    };
+
     // Basic table with static data
     $scope.basicTable = {
         settings: [
