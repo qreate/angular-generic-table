@@ -11,7 +11,7 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
     };
 
     $scope.searchTable = function(string){
-        console.log(string);
+        //console.log(string);
         $scope.$broadcast('gt-search-table:'+$scope.basicTableId,string);
     };
 
