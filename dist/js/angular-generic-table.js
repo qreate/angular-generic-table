@@ -665,7 +665,7 @@ angular.module('angular.generic.table').directive('genericTable', function() {
                 output = $compile(output)(elementScope); // compile
                 element.append(output); // add html
             } else {
-                element[0].innerHTML = output; // add html
+                element[0].innerHTML = output === null ? '':output; // add html
             }
         }
     };

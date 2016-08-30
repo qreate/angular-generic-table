@@ -2,6 +2,11 @@ Release History
 ---------------
 
 ## [Unreleased]
+# [1.4.1] - 2016-08-30
+
+### Fixed
+- null values in data were rendered as "null" in IE, now they're converted to empty string
+
 # [1.4.0] - 2016-08-30
 ### Breaking changes
 - Expand property in field settings is no longer used to define which directive to use when expanding/opening a row, just pass true if clicking column should expand row. Use gtExpand attribute to pass and object containing which directive to use and optionally, if multiple rows should be allowed, add that property as well like this:
