@@ -472,7 +472,7 @@ angular.module('angular.generic.table').directive('genericTable', function() {
                     }
 
                     // if exportColumns are passed with options...
-                    if (typeof options.exportColumns !== 'undefined') {
+                    /*if (typeof options.exportColumns !== 'undefined') {
                         // ...set value to null i.e. don't export column if it's not in the exportColumns array
                         if (options.exportColumns.indexOf(tableSetting.objectKey)===-1){
                             row[key] = null;
@@ -482,7 +482,7 @@ angular.module('angular.generic.table').directive('genericTable', function() {
                     else if (typeof tableSetting.export !== 'undefined' && tableSetting.export === false) {
                         // ...set value to null i.e. don't export column
                         row[key] = null;
-                    }
+                    }*/
                 }
             }
         }
