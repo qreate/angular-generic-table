@@ -2,6 +2,11 @@ Release History
 ---------------
 
 ## [Unreleased]
+# [1.4.2] - 2016-09-06
+
+### Fixed
+- error when exporting hidden columns to excel 
+
 # [1.4.1] - 2016-08-30
 
 ### Fixed
