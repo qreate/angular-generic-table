@@ -1,1 +1,1 @@
-"# generic-table" 
+"# angular-generic-table" 
