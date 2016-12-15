@@ -11,7 +11,7 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
     };
 
     $scope.searchTable = function(string){
-        console.log(string);
+        //console.log(string);
         $scope.$broadcast('gt-search-table:'+$scope.basicTableId,string);
     };
 
@@ -21,6 +21,13 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
     $scope.selectedRows = {
         row1:true
     };
+
+    // row expand configuration
+    $scope.expandConfig = {
+        directive:'<custom-dir></custom-dir>',
+        multiple:false
+    };
+
     // Basic table with static data
     $scope.basicTable = {
         settings: [
@@ -40,7 +47,7 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
                 columnOrder:20
             },{
                 objectKey:'numberOfCats',
-                visible:false,
+                visible:true,
                 enabled:true,
                 sort:'enable',
                 sortOrder:0,
@@ -72,6 +79,7 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
         fields:[
             {
                 name:'Number of cats',
+                stackedHeading:'No. of cats',
                 objectKey:'expandRow',
                 className:'expand',
                 expand:'<custom-dir></custom-dir>',
@@ -82,20 +90,25 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
             },
             {
                 name:'City',
+                stackedHeading:true,
                 objectKey:'city',
                 classNames:"",
                 click:function(row){showSomething(row.numberOfCats);}
             },{
                 name:'Id',
+                stackedHeading:true,
                 objectKey:'id',
                 classNames:""
             },{
                 name:'Number of cats',
+                stackedHeading:'No. of cats',
                 type:"NUMBER",
                 objectKey:'numberOfCats',
-                classNames:"text-right"
+                classNames:"text-right",
+                sort:function (row,column) { return row.numberOfCats.toString()}
             },{
                 name:'% Happy cats',
+                stackedHeading:true,
                 objectKey:'percentHappyCats',
                 classNames:"text-right",
                 render:function(row){ return '<span>'+row.numberOfCats/(row.numberOfCats*1.2)+'%</span>';},
@@ -103,6 +116,7 @@ angular.module('generic.table.dev').controller('DevController',function($scope){
                 search:function(row, column){ return row.numberOfCats }
             },{
                 name:'',
+                stackedHeading:'Checkbox',
                 objectKey:'checkbox',
                 classNames:"text-center",
                 render:function(row){

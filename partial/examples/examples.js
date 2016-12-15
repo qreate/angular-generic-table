@@ -102,10 +102,20 @@ angular.module('generic.table.dev').controller('DocumentationController',functio
             "default":"true",
             "description":"show pagination"
         },{
-            "name":"gt-no-data-txt (optional)",
+            "name":"gt-no-data-txt (deprecated)",
             "type":"string",
             "default":"No table data to display",
-            "description":"text for when table is empty"
+            "description":"text for when table is empty, deprecated as of version 1.4 (see gt-translations below)."
+        },{
+            "name":"gt-translations (optional)",
+            "type":"object",
+            "default":"empty",
+            "description":"object containing the following keys: 'noData','next' and 'previous', set key value to override default text."
+        },{
+            "name":"gt-expand (optional)",
+            "type":"object",
+            "default":"empty",
+            "description":"object containing the following keys: 'directive','multiple' and 'rows', use directive to tell generic-tables which directive to use in the expanded row. Set multiple to true if multiple rows should be allowed to be expanded/open at the same time. Rows provides information on which rows are expanded. See example below in the \"Advanced example\"."
         }]
     };
 
@@ -225,6 +235,14 @@ angular.module('generic.table.dev').controller('DocumentationController',functio
             "name":"gt-paginate-table:gtId",
             "description":"change how many rows are visible",
             "options":"number, ie. $scope.$broadcast('gt-paginate-table:tableId', 10);"
+        },{
+            "name":"gt-open-all-rows:gtId",
+            "description":"open/expand all rows (requires expand configuration to be set up)",
+            "options":"none"
+        },{
+            "name":"gt-close-all-rows:gtId",
+            "description":"close all open/expanded rows (requires expand configuration to be set up)",
+            "options":"none"
         },{
             "name":"gt-export-csv:gtId",
             "description":"export table data to csv, <a href='/#examples#exportOptions'>see all export options</a>.",
@@ -407,6 +425,22 @@ angular.module('generic.table.dev').controller('DocumentationController',functio
         $scope.$broadcast('gt-filter-table:'+$scope.tableCustomRender.id,filters);
     };
 
+    // function for closing open columns
+    $scope.closeAllRows = function() {
+        $scope.$broadcast('gt-close-all-rows:'+$scope.tableCustomRender.id);
+    };
+
+    // function for closing open columns
+    $scope.openAllRows = function() {
+        $scope.$broadcast('gt-open-all-rows:'+$scope.tableCustomRender.id);
+    };
+
+    // row expand configuration
+    $scope.expandConfig = {
+        directive:'<custom-dir></custom-dir>',
+        multiple:false
+    };
+
     // Table with custom render function
     $scope.tableCustomRender = {
         settings: [
@@ -452,6 +486,7 @@ angular.module('generic.table.dev').controller('DocumentationController',functio
         fields:[
             {
                 name:"Favorite color",
+                stackedHeading:'Custom heading for stacked',
                 type:"STRING",
                 objectKey:'favoriteColor',
                 classNames:"text-right middle",
@@ -459,12 +494,14 @@ angular.module('generic.table.dev').controller('DocumentationController',functio
                 search:false
             },{
                 name:"Birthday",
+                stackedHeading:true,
                 type:"DATE",
                 objectKey:'birthday',
                 classNames:"",
                 render: function(row){return moment.unix(row.birthday).format('YYYY-MM-DD')}
             },{
                 name:'Name',
+                stackedHeading:true,
                 type:"STRING",
                 objectKey:'fullName',
                 classNames:"",
@@ -472,6 +509,7 @@ angular.module('generic.table.dev').controller('DocumentationController',functio
 
             },{
                 name:'Age',
+                stackedHeading:true,
                 type:"NUMBER",
                 objectKey:'age',
                 classNames:"text-right",
@@ -479,13 +517,14 @@ angular.module('generic.table.dev').controller('DocumentationController',functio
                 value: function(row){return moment().diff(moment.unix(row.birthday),'years')}
             },{
                 name:'Details',
+                stackedHeading:false,
                 type:"NUMBER",
                 objectKey:'details',
-                classNames:"text-right",
+                classNames:"text-right hidden-stacked",
                 render: function(row, column){ return '<a>{{row.isOpen ? "Hide":"Show"}}<a/>'},
                 compile:true,
                 value: function(row){return 'details'},
-                expand:'<custom-dir></custom-dir>',
+                expand:true,
                 search:false
             }
         ],
@@ -524,7 +563,7 @@ angular.module('generic.table.dev').controller('DocumentationController',functio
         template:'<div><div class="pull-left"><label>Name:&nbsp;</label>{{row.fullName}}<br><label>Age:&nbsp;</label>{{row.age}}<br><label>Favorite random number:&nbsp;</label>{{randomNumber}}<br><a ng-click="update()">Update</a></div> <a class="pull-right" ng-click="close()">Close</a> </div>',
         restrict: 'E',
         link: function(scope, element, attrs, fn) {
-            console.log(scope.row); // log row object
+            //console.log(scope.row); // log row object
             scope.close = scope.toggleRow; // assign close function to button in directive
             scope.randomNumber = Math.random();
             scope.update = function(){

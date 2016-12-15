@@ -34,15 +34,49 @@ div.generic-table {
             td > span.gt-click-enabled {
                 cursor: pointer;
             }
+            td > span.gt-row-label {
+                display: none;
+            }
             td.gt-no-data {
                 text-align: center;
             }
         }
+
     }
     div.gt-pagination {
         ul li.active button {
             font-weight: bold;
             color: #000;
+        }
+    }
+}
+@media (max-width: 768px) {
+    div.generic-table {
+        table.table-stacked tr {
+            border-bottom: 1px solid #ddd;
+            border-top: 1px solid #ddd;
+            th {
+                display: none;
+            }
+            td {
+                display: block;
+                text-align: right;
+                border:none;
+                > span {
+                    display: table-cell;
+                }
+                > span.gt-row-label {
+                    white-space: nowrap;
+                    font-weight: bold;
+                }
+                > span.gt-row-content {
+                    text-align: right;
+                    width: 100%;
+                }
+                &.hidden-stacked {
+                    display: none;
+                }
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
     <div ng-controller="DocumentationController">
         <h1>Generic table for Angular</h1>
         <h2>Usage</h2>
-        <p>The generic-table needs three things to work: <strong>settings</strong>, <strong>field definitions</strong> and <strong>data</strong>, totals is optional.</p>
+        <p class="text-justify">The generic-table needs three things to work: <strong>settings</strong>, <strong>field definitions</strong> and <strong>data</strong>, totals is optional.</p>
         <br>
         <h4>Settings</h4>
         <pre>
@@ -24,6 +24,7 @@
             <code class="line-numbers language-javascript" prism>
                 fields:[{
                     name:'Name', // name or label of the field, will be displayed as heading for column,
+                    stackedHeading:true, // true or custom name, used for showing column headings when columns are stacket using table-stacked class, (OPTIONAL),
                     type:"STRING", // type of data, i.e. STRING, NUMBER etc (DEPRECATED),
                     objectKey:'name', // key for mapping column with settings and totals,
                     classNames:"my-custom-class" // custom class names appended to the column,
@@ -31,10 +32,11 @@
                     compile: true // should field be compiled, true, false or scope to compile, false by default (OPTIONAL),
                     value: function(row,column){ return row[column]/2;} // custom function for column value if no data exists for column in data array (OPTIONAL),
                     click: function(){ return console.log('column clicked);} // click function for column (OPTIONAL),
-                    expand: "&lt;my-directive&gt;&lt;/my-directive&gt;" // expand (open/close) row when clicked and add this as content (could be a directive or plain html) (OPTIONAL),
+                    expand: true, // expand (open/close) row when clicked and add directive (defined using gtExpand attribute) to new row (OPTIONAL),
                     export: function(row,column){ return parseFloat(row[column]);} // custom function for export presentation (OPTIONAL),
-                    exportEscapeString: true // should field be escaped when exported, true by default (OPTIONAL),
+                    exportEscapeString: true, // should field be escaped when exported, true by default (OPTIONAL),
                     search: function(row, column){ return row[column]; } // custom function for searching field, if field shouldn't be searchable change function to false, true (search using data value) by default (OPTIONAL)
+                    sort: function(row, column){ return parseFloat(row[column]); } // custom function for sorting, ex. if field contains string but should be sorted as value (OPTIONAL)
                 }]
             </code>
         </pre>
@@ -58,20 +60,25 @@
         </pre>
         <br>
         <h3>Attribute options</h3>
-        <p>Directive attributes available for generic-table directive.</p>
+        <p class="text-justify">Directive attributes available for generic-table directive.</p>
         <generic-table gt-data="optionsTable.data" gt-settings="optionsTable.settings" gt-fields="optionsTable.fields" gt-pagination=false></generic-table>
         <br>
         <h3>Events</h3>
-        <p>Events emitted by the table.</p>
+        <p class="text-justify">Events emitted by the table.</p>
         <generic-table gt-data="eventsTable.data" gt-settings="eventsTable.settings" gt-fields="eventsTable.fields" gt-pagination=false></generic-table>
         <br>
         <h3>Event listeners</h3>
-        <p>Use event listeners to change/update table data, table settings and field definitions. The table will also listen for changes to row length ie. how many rows should be displayed.</p>
+        <p class="text-justify">Use event listeners to change/update table data, table settings and field definitions. The table will also listen for changes to row length ie. how many rows should be displayed.</p>
         <generic-table gt-data="listenersTable.data" gt-settings="listenersTable.settings" gt-fields="listenersTable.fields" gt-pagination=false></generic-table>
         <br>
         <h3 id="exportOptions">Export to CSV options</h3>
-        <p>Pass optional arguments to override the default settings when exporting data to csv.</p>
+        <p class="text-justify">Pass optional arguments to override the default settings when exporting data to csv.</p>
         <generic-table gt-data="exportOptionsTable.data" gt-settings="exportOptionsTable.settings" gt-fields="exportOptionsTable.fields" gt-pagination=false></generic-table>
+        <br>
+        <h3>Responsive layout</h3>
+        <p class="text-justify">Add <code>table-stacked</code> class to gt-classes (like you do for other bootstrap classes) to get stacked columns on small screens i.e. mobile devices.</p>
+        <p class="text-justify">By default the css uses bootstrap's screen-xs-max value of 768 px but you could as easily write your own media query and use another value. If you want headings for each column, add <code>stackedHeading</code> key to your field settings object. Use <code>true</code> if you want to reuse the same label/name you've already declared or enter a custom string if you want something else. See advance example implementation below. </p>
+
     </div>
     <div ng-controller="BasicExampleController">
         <br>
@@ -164,21 +171,34 @@
     </div>
     <div ng-controller="CustomRenderExampleController">
         <h3>Advanced example</h3>
-        <p><strong>Let’s add some features to our example!</strong><br>The example below has support for:
+        <p class="text-justify"><strong>Let’s add some features to our example!</strong><br>The example below has support for:
         </p>
         <strong>Table search</strong>
-        <p>Search (filter) table with input field, separate search terms with a space “ “. Use field definitions to enable search for a particular field.</p>
+        <p class="text-justify">Search (filter) table with input field, separate search terms with a space “ “. Use field definitions to enable search for a particular field.</p>
         <strong>Filter table</strong>
-        <p>Filter table by one or more properties (objectKey). Reset filters by passing an empty object. This examples uses a predefined filter.</p>
+        <p class="text-justify">Filter table by one or more properties (objectKey). Reset filters by passing an empty object. This examples uses a predefined filter.</p>
         <strong>Export to CSV</strong>
-        <p>Use custom export function on field definition to alter the exported value, remove field from export using settings.
+        <p class="text-justify">Use custom export function on field definition to alter the exported value, remove field from export using settings.
         </p>
         <strong>Expanding rows</strong>
-        <p>Expand rows and show custom content, why not pass your own directive?
-            Access parent scope and row values by setting directive scope to false or if you prefer, pass row object to an isolated scope like this in the expand property of the field definition: <code>expand: &lt;my-custom-directive data-row=”row”&gt;</code>
+        <p class="text-justify">Expand rows and show custom content when column field is clicked by setting expand to true, <code>expand: true</code>.
+            In order for this to work you must also define the content of the expanded row. Use the gt-expand attribute on the directive to pass configuration to the table like this:
+            <code>
+                <br>
+                <br>
+                $scope.expandConfig = {<br>
+                    directive:'&lt;my-custom-directive&gt;&lt;/my-custom-directive&gt;', // name of our directive<br>
+                    multiple:false // should we allow mulltiple rows to be expanded/open<br>
+                }<br>
+                <br>
+            </code>
+            Access parent scope and row values by setting directive scope to false or if you prefer, pass row object to an isolated scope like this in the expand configuration <code>directive: &lt;my-custom-directive&gt; data-row=”row”&gt;'&lt;/my-custom-directive&gt;'</code>
+        </p>
+        <strong>Responsive layout</strong>
+        <p class="text-justify">Stack column on small screens for better readability and use custom labels/headings if you want to. Try resizing browser to see the result of stacking columns.
         </p>
         <strong>Displaying table information</strong>
-        <p>I.e. show total number of entries, filtered entries etc.</p>
+        <p class="text-justify">I.e. show total number of entries, filtered entries etc.</p>
         <br>
         <a ng-click="example = example === true ? false:true;" class="link">
             <span ng-show="!example">Show code</span>
@@ -189,15 +209,15 @@
         <pre>
             <code class="line-numbers language-markup" prism>
                 &lt;form class=&quot;form-inline&quot;&gt;
-                    &lt;div class=&quot;form-group&quot;&gt;
-                        &lt;input class=&quot;form-control&quot; role=&quot;search&quot; placeholder=&quot;Search table&quot; ng-model=&quot;searchField&quot; ng-change=&quot;searchTable(searchField)&quot;/&gt;
-                    &lt;/div&gt;
-                    &lt;button class=&quot;btn btn-default&quot; ng-click=&quot;applyFilters()&quot;&gt;Apply filters&lt;/button&gt;
-                    &lt;button class=&quot;btn btn-default&quot; ng-click=&quot;resetFilters()&quot;&gt;Reset filters&lt;/button&gt;
-                    &lt;span class=&quot;form-control-static&quot; ng-show=&quot;tableInfo.filtered!==tableInfo.total&quot;&gt;&amp;nbsp;Showing {{tableInfo.showingFrom}} to {{tableInfo.showingTo}} of {{tableInfo.filtered}} entries (filtered from a total of {{tableInfo.total}} entries).&lt;/span&gt;&amp;nbsp;
-                    &lt;button class=&quot;btn btn-default pull-right&quot; ng-click=&quot;exportCsv()&quot;&gt;Export to CSV&lt;/button&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;&lt;input class=&quot;form-control&quot; role=&quot;search&quot; placeholder=&quot;Search table&quot; ng-model=&quot;searchField&quot; ng-change=&quot;searchTable(searchField)&quot;/&gt;&lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;&lt;button class=&quot;btn btn-default btn-block&quot; ng-click=&quot;applyFilters()&quot;&gt;Apply predefined filters&lt;/button&gt;&lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;&lt;button class=&quot;btn btn-default btn-block&quot; ng-click=&quot;resetFilters()&quot;&gt;Reset filters&lt;/button&gt;&lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot; ng-show=&quot;tableInfo.filtered!==tableInfo.total&quot;&gt;&lt;span class=&quot;form-control-static&quot;&gt;&amp;nbsp;Showing {{tableInfo.showingFrom}} to {{tableInfo.showingTo}} of {{tableInfo.filtered}} entries (filtered from a total of {{tableInfo.total}} entries).&lt;/span&gt;&amp;nbsp&lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;&lt;button class=&quot;btn btn-default btn-block&quot; ng-click=&quot;exportCsv()&quot;&gt;Export to CSV&lt;/button&gt;&lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;&lt;button class=&quot;btn btn-default btn-block&quot; ng-click=&quot;closeAllRows()&quot;&gt;Close all rows&lt;/button&gt;&lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;&lt;button class=&quot;btn btn-default btn-block&quot; ng-click=&quot;openAllRows()&quot;&gt;Open all rows&lt;/button&gt;&lt;/div&gt;
                 &lt;/form&gt;
-                &lt;generic-table gt-settings=&quot;tableCustomRender.settings&quot; gt-fields=&quot;tableCustomRender.fields&quot; gt-totals=&quot;tableCustomRender.totals&quot; gt-rows=&quot;25&quot; gt-id=&quot;tableCustomRender.id&quot;&gt;&lt;/generic-table&gt;
+                &lt;generic-table gt-classes=&quot;table-stacked&quot; gt-settings=&quot;tableCustomRender.settings&quot; gt-fields=&quot;tableCustomRender.fields&quot; gt-totals=&quot;tableCustomRender.totals&quot; gt-rows=&quot;25&quot; gt-id=&quot;tableCustomRender.id&quot; gt-expand=&quot;expandConfig&quot;&gt;&lt;/generic-table&gt;
             </code>
         </pre>
             <h4>Javascript</h4>
@@ -233,6 +253,23 @@
                     $scope.resetFilters = function() {
                         var filters = {};
                         $scope.$broadcast('gt-filter-table:'+$scope.tableCustomRender.id,filters);
+                    };
+
+
+                    // function for closing open columns
+                    $scope.closeAllRows = function() {
+                        $scope.$broadcast('gt-close-all-rows:'+$scope.tableCustomRender.id);
+                    };
+
+                    // function for closing open columns
+                    $scope.openAllRows = function() {
+                        $scope.$broadcast('gt-open-all-rows:'+$scope.tableCustomRender.id);
+                    };
+
+                    // row expand configuration
+                    $scope.expandConfig = {
+                        directive:'&lt;custom-dir&gt;&lt;/custom-dir&gt;',
+                        multiple:false
                     };
 
                     // Table with custom render function
@@ -280,6 +317,7 @@
                         fields:[
                             {
                                 name:"Favorite color",
+                                stackedHeading:'Custom heading for stacked',
                                 type:"STRING",
                                 objectKey:'favoriteColor',
                                 classNames:"text-right middle",
@@ -287,17 +325,20 @@
                                 search:false
                             },{
                                 name:"Birthday",
+                                stackedHeading:true,
                                 type:"DATE",
                                 objectKey:'birthday',
                                 classNames:"",
                                 render: function(row){return moment.unix(row.birthday).format('YYYY-MM-DD')}
                             },{
                                 name:'Name',
+                                stackedHeading:true,
                                 type:"STRING",
                                 objectKey:'fullName',
                                 classNames:""
                             },{
                                 name:'Age',
+                                stackedHeading:true,
                                 type:"NUMBER",
                                 objectKey:'age',
                                 classNames:"text-right",
@@ -305,13 +346,14 @@
                                 value: function(row){return moment().diff(moment.unix(row.birthday),'years')}
                             },{
                                 name:'Details',
+                                stackedHeading:false,
                                 type:"NUMBER",
                                 objectKey:'details',
-                                classNames:"text-right",
+                                classNames:"text-right hidden-stacked",
                                 render: function(row, column){ return '&lt;a&gt;{{row.isOpen ? "Hide":"Show"}}&lt;/a&gt;'},
                                 compile:true,
                                 value: function(row){return 'details'},
-                                expand:'&lt;custom-dir&gt;&lt;/custom-dir&gt;',
+                                expand:true,
                                 search:false
                             }
                         ],
@@ -367,12 +409,15 @@
         <br/>
         <br/>
         <form class="form-inline">
-            <input class="form-control" role="search" placeholder="Search table" ng-model="searchField" ng-change="searchTable(searchField)"/>
-            <button class="btn btn-default" ng-click="applyFilters()">Apply predefined filters</button>
-            <button class="btn btn-default" ng-click="resetFilters()">Reset filters</button>
-            <span class="form-control-static" ng-show="tableInfo.filtered!==tableInfo.total">&nbsp;Showing {{tableInfo.showingFrom}} to {{tableInfo.showingTo}} of {{tableInfo.filtered}} entries (filtered from a total of {{tableInfo.total}} entries).</span>&nbsp;
-            <button class="btn btn-default pull-right" ng-click="exportCsv()">Export to CSV</button>
+            <div class="form-group"><input class="form-control" role="search" placeholder="Search table" ng-model="searchField" ng-change="searchTable(searchField)"/></div>
+            <div class="form-group"><button class="btn btn-default btn-block" ng-click="applyFilters()">Apply predefined filters</button></div>
+            <div class="form-group"><button class="btn btn-default btn-block" ng-click="resetFilters()">Reset filters</button></div>
+            <div class="form-group" ng-show="tableInfo.filtered!==tableInfo.total"><span class="form-control-static">&nbsp;Showing {{tableInfo.showingFrom}} to {{tableInfo.showingTo}} of {{tableInfo.filtered}} entries (filtered from a total of {{tableInfo.total}} entries).</span>&nbsp</div>
+            <div class="form-group"><button class="btn btn-default btn-block" ng-click="exportCsv()">Export to CSV</button></div>
+            <div class="form-group"><button class="btn btn-default btn-block" ng-click="closeAllRows()">Close all rows</button></div>
+            <div class="form-group"><button class="btn btn-default btn-block" ng-click="openAllRows()">Open all rows</button></div>
+
         </form>
-        <generic-table gt-settings="tableCustomRender.settings" gt-fields="tableCustomRender.fields" gt-totals="tableCustomRender.totals" gt-rows="25" gt-id="tableCustomRender.id"></generic-table>
+        <generic-table gt-classes="table-stacked" gt-settings="tableCustomRender.settings" gt-fields="tableCustomRender.fields" gt-totals="tableCustomRender.totals" gt-rows="25" gt-id="tableCustomRender.id" gt-expand="expandConfig"></generic-table>
     </div>
 </div>
