@@ -2,15 +2,18 @@ Release History
 ---------------
 
 ## [Unreleased]
+### Fixed
+- Improved chunk method used for pagination
+
 # [1.4.2] - 2016-09-06
 
 ### Fixed
-- error when exporting hidden columns to excel 
+- Error when exporting hidden columns to excel 
 
 # [1.4.1] - 2016-08-30
 
 ### Fixed
-- null values in data were rendered as "null" in IE, now they're converted to empty string
+- Null values in data were rendered as "null" in IE, now they're converted to empty string
 
 # [1.4.0] - 2016-08-30
 ### Breaking changes
