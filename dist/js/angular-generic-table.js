@@ -207,9 +207,17 @@ angular.module('angular.generic.table').directive('genericTable', function() {
         applyPagination();
     };
 
+    var gtChunk = function(arr, chunkSize) {
+        var result = [];
+        var arrSizeCache=arr.length;
+        for (var i=0; i<arrSizeCache; i+=chunkSize)
+            result.push(arr.slice(i,i+chunkSize));
+        return result;
+    };
+
     // pagination, this is where we decide which subset of the data to show
     var applyPagination = function (){
-        $scope.pages = $filter('chunkBy')(sortedData, parseInt($scope.gtRows));
+        $scope.pages = gtChunk(sortedData, parseInt($scope.gtRows));
         $scope.currentPage = 0;
         $scope.loading = true;
         $scope.$emit('gt-started-rendering');
