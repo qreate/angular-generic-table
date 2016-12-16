@@ -2,6 +2,8 @@ Release History
 ---------------
 
 ## [Unreleased]
+# [1.4.3] - 2016-12-16
+
 ### Fixed
 - Improved chunk method used for pagination
 
