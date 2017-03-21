@@ -211,11 +211,11 @@ gulp.task('build-gt-less', function () {
         .pipe(filter('generic-table.css'))
 
         //.pipe(sourcemaps.write('./'))
-        .pipe(rename("angular-generic-table.css"))
+        .pipe(rename("angularjs-generic-table.css"))
         .pipe(gulp.dest('./dist/css'))// Write the CSS & Source maps
         .pipe(filter('**/*.css')) // Filtering stream to only css files
         .pipe(cssmin()) // Minify css
-        .pipe(rename("angular-generic-table.min.css"))
+        .pipe(rename("angularjs-generic-table.min.css"))
         .pipe(gulp.dest('./dist/css'));
 });
 
