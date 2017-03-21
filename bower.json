@@ -1,7 +1,7 @@
 {
   "name": "angularjs-generic-table",
   "description": "Generic Table - A generic table for AngularJS that leverages one time binding for fast rendering. Generic table uses standard markup for tables ie. table, tr and td elements etc. and has support for expanding rows, search, filters, sorting, pagination, export to CSV, column clicks, custom column rendering, custom export values.",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "keywords": [
     "angularjs",
     "generic-table",

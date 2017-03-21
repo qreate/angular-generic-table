@@ -1,10 +1,13 @@
 Release History
 ---------------
 ## [Unreleased]
+# [1.5.1] - 2017-03-21
+### Fixed
+- Bower.json 
+
 # [1.5.0] - 2017-03-21
 ### Breaking changes
 - Changed package name from `angular-generic-table` to `angularjs-generic-table` to avoid conflict with version for angular 2+. In order to get everything to work you need to update references to generic-table source files in your code.
-
 
 # [1.4.4] - 2016-12-16
 
